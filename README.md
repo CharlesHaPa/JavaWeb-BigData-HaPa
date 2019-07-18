@@ -12,18 +12,18 @@
 #### 主页
 ![image](https://github.com/CharlesHaPa/JavaWeb-BigData-HaPa/blob/master/display/1.PNG)
 #### 订单管理
-![image](https://github.com/CharlesHaPa/JavaWeb-BigData-HaPa/blob/master/display/2.png)
+![image](https://github.com/CharlesHaPa/JavaWeb-BigData-HaPa/blob/master/display/2.PNG)
 #### 退票
-![image](https://github.com/CharlesHaPa/JavaWeb-BigData-HaPa/blob/master/display/3.png)
+![image](https://github.com/CharlesHaPa/JavaWeb-BigData-HaPa/blob/master/display/3.PNG)
 #### 购票
-![image](https://github.com/CharlesHaPa/JavaWeb-BigData-HaPa/blob/master/display/4.png)
+![image](https://github.com/CharlesHaPa/JavaWeb-BigData-HaPa/blob/master/display/4.PNG)
 #### 添加乘客
-![image](https://github.com/CharlesHaPa/JavaWeb-BigData-HaPa/blob/master/display/5.png)
+![image](https://github.com/CharlesHaPa/JavaWeb-BigData-HaPa/blob/master/display/5.PNG)
 #### 退款
-![image](https://github.com/CharlesHaPa/JavaWeb-BigData-HaPa/blob/master/display/6.png)
+![image](https://github.com/CharlesHaPa/JavaWeb-BigData-HaPa/blob/master/display/6.PNG)
 #### 年度分析一
-![image](https://github.com/CharlesHaPa/JavaWeb-BigData-HaPa/blob/master/display/7.png)
+![image](https://github.com/CharlesHaPa/JavaWeb-BigData-HaPa/blob/master/display/7.PNG)
 #### 年度分析二
-![image](https://github.com/CharlesHaPa/JavaWeb-BigData-HaPa/blob/master/display/8.png)
+![image](https://github.com/CharlesHaPa/JavaWeb-BigData-HaPa/blob/master/display/8.PNG)
 #### 线路压力分析
-![image](https://github.com/CharlesHaPa/JavaWeb-BigData-HaPa/blob/master/display/9.png)
+![image](https://github.com/CharlesHaPa/JavaWeb-BigData-HaPa/blob/master/display/9.PNG)
