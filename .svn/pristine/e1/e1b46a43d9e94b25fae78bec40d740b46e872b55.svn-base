@@ -1,0 +1,9 @@
+package com.sw1408.service;
+
+import com.sw1408.po.Client;
+
+public interface ClientService {
+
+	Client userLogin(String enterName, String psw);
+
+}

@@ -1,0 +1,15 @@
+package com.sw1408.mapper;
+
+import com.sw1408.po.Item;
+
+/**
+ * Created by DLETC on 2017/7/4.
+ */
+public interface ItemMapper {
+    /**
+     *
+     * @param id
+     * @return
+     */
+    Item selectItemById(int id);
+}

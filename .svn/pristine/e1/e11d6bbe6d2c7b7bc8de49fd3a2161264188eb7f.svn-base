@@ -1,0 +1,32 @@
+package com.sw1408.controller;
+
+
+import javax.annotation.Resource;
+
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import com.sw1408.service.TicketService;
+
+
+
+
+@Controller
+public class TicketController {
+
+	@Resource TicketService ticketService;
+	//@RequestParam会将值匹配到id属性里
+	@RequestMapping(value="/returnTicket",method= RequestMethod.POST)
+	public String returnTicket(@RequestParam int id){
+		boolean result = ticketService.returnTicket(id);
+		if(result){
+			return "client/success";
+		}
+		else{
+			return "client/error";
+		}
+	}
+
+}

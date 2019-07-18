@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sw1408.mapper.ScheduleMapper">
+    <select id="selectScheduleByTrainId" resultType="com.sw1408.po.Schedule">
+        SELECT * FROM SCHEDULE WHERE TRAINID = #{trainId}
+    </select>
+
+    <select id="selectScheduleByTrainIdAndStationId" parameterType="com.sw1408.po.Schedule"
+            resultType="com.sw1408.po.Schedule">
+        SELECT * FROM SCHEDULE WHERE TRAINID = #{trainId} AND STATIONID = #{stationId}
+    </select>
+
+    <insert id="addSchedule" parameterType="com.sw1408.po.Schedule">
+        INSERT INTO SEAT(TRAINID,STATIONID,DEPARTTIME,ARRIVALTIME) VALUES(#{trainId},#{stationId},#{departTime},#{arrivalTime})
+    </insert>
+
+</mapper>

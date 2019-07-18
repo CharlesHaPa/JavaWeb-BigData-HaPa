@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sw1408.mapper.TicketMapper">
+
+	<update id ="updateTicketStatus">
+	     update ticket 
+	     set STATUS = #{1}
+	     where id = #{0}
+	</update>
+	
+	<insert id="createTicket">
+		insert into
+		Ticket(seatId,passengerId,type,status,price,departure,arrival)
+		values(#{seatId},#{passengerId},#{type},#{status},#{price},#{departure},#{arrival})
+	</insert>
+	
+	<update id="updateSeat">
+		UPDATE SEAT SET USABLE = #{1} WHERE Id=#{0}
+	</update>
+	
+	<select id="selectTicketById" parameterType ="int" resultType = "com.sw1408.po.Ticket">
+	     select * from ticket where id = #{id}
+	</select>
+	
+	<insert id="createItem">
+		INSERT INTO ITEM (CLIENTID, TICKETID, STATUS,
+		CREATEDATE, PAYDATE, TOTALFEE)
+		VALUES (#{0},(select * from (select id from ticket where seatId = #{1} and departure=#{2}
+		and arrival=#{3}) where ROWNUM &lt; 2),#{4},#{5},#{6},#{7})
+	</insert>
+	
+	<insert id="addInsurance">
+		INSERT INTO ITEMTOINSURANCE(ITEMID, INSURANCEID)
+		VALUES (
+		(select id from item where clientId=#{0} and
+		ticketId=(select id from ticket where seatId=#{1} and passengerId=#{2} and status='已经出票' and departure=#{3}
+		 and arrival=#{4})), #{5})
+	</insert>
+	
+	<select id="selectTicketByPassengerId" resultType="com.sw1408.po.Ticket">
+		SELECT * FROM TICKET WHERE PASSENGERID = #{passengerId}
+	</select>
+
+	<select id="selectTicketByDeparture" resultType="com.sw1408.po.Ticket">
+		SELECT * FROM TICKET WHERE DEPARTURE = #{departure}
+	</select>
+	
+	
+	
+	
+</mapper>

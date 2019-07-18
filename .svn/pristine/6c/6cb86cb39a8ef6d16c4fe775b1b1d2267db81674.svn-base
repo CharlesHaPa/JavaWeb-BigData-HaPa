@@ -1,0 +1,5 @@
+package com.sw1408.mapper;
+
+public interface UtilMapper {
+
+}

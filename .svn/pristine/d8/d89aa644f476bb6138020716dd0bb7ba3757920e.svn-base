@@ -1,0 +1,35 @@
+package com.sw1408.test.service;
+
+import com.sw1408.service.ItemService;
+import com.sw1408.vo.ItemDetail;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+/**
+ * Created by DLETC on 2017/7/4.
+ */
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("/applicationContext.xml")
+public class ItemServiceTest {
+    @Autowired
+    private ItemService itemService;
+
+    @Test
+    public void shouldPrintItemDetail() {
+        System.out.println(itemService.getItemDetail(1));
+    }
+
+    @Test
+    public void shouldPirntQueriedItemDetailByStatusAndCreateDateRange() {
+        System.out.println(itemService.queryItemDetailByStatusAndCreateDateRange("未支付", java.sql.Date.valueOf("2017-7-1"), java.sql.Date.valueOf("2017-7-5")));
+    }
+
+    @Test
+    public void shouldPrintQueriedItemDetailByPassengerName() {
+        System.out.println(itemService.queryItemDetailByPassengerName("sxy"));
+    }
+}

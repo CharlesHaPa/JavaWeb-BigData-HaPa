@@ -1,0 +1,284 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
+%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+
+</head>
+<link rel="stylesheet"
+	href="<%=basePath%>client/css/SXY-addFrequentContacts.css" />
+<link rel="stylesheet" href="<%=basePath%>main/css/z_login.css" />
+<script type="text/javascript"
+	src="<%=basePath%>assets/js/jquery-3.1.1.js"></script>
+<script type="text/javascript"
+	src="<%=basePath%>client/js/addPassenger.js"></script>
+
+<style>
+
+#warnname {
+	color:red;
+	font-size: 15px;
+}
+
+#warnname1 {
+	color:red;
+	font-size: 15px;
+}
+
+#warnCard{
+	color:red;
+	font-size: 15px;
+}
+</style>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#frequentContactsTable").load("<%=basePath%>client/frequentContactsTable");
+});
+
+function addPassenger(){
+	$.ajax({
+		type:"POST",
+		url:"<%=basePath%>client/addPassenger",
+		cache:false, 
+		data:{
+			name: $("#addPName").val(),
+			cardId: $("#cardId").val(),
+			gender: $('input:radio[id="m"]:checked').val(),
+			isStudent: $("#addPassengerType").val()
+	    },
+	    success:function(data){
+			if(data.result == 'false') {
+				alert("请不要添加相同的乘客！");
+			}
+			$("#addBox").fadeOut("fast");
+			$("#mask").css({
+				display: 'none'
+			});
+			$('#content').load("<%=basePath%>client/showFrequentContacts");
+		}
+   });
+}
+
+function changePage(pageNum){
+	$("#frequentContactsTable").load("<%=basePath%>client/frequentContactsTable?pageNum=" + pageNum);
+}
+
+function deletePassenger(name, cardId, isStudent) {
+	var result = window.confirm("确定要删除" + name + "吗？");
+	if(result) {
+		$("#frequentContactsTable").load("<%=basePath%>client/deletePassenger?cardId=" + cardId + "&isStudent=" + isStudent);
+	}
+}
+
+function showModifyBox(name, gender, cardId, isStudent, id) {
+	
+	$("body").append("<div id='mask2'></div>");
+	$("#mask2").addClass("mask").fadeIn("slow");
+	$("#modifyBox").fadeIn("slow");
+	document.getElementById("modifyPName").value = name;
+	document.getElementById("modifyCardId").value = cardId;
+	document.getElementById("id").value = id;
+	if(gender == 1) {
+		/* console.log(gender); */
+		document.getElementById("modifym").setAttribute("checked", "checked");
+	} else {
+		/* console.log(gender); */
+		document.getElementById("modifyf").setAttribute("checked", "checked");
+	}
+	
+	if(isStudent == 1) {
+		/* console.log(isStudent); */
+		document.getElementById("modifyAdult").setAttribute("selected", "selected");
+	} else {
+		/* console.log(isStudent); */
+		document.getElementById("modifyStudent").setAttribute("selected", "selected");
+	}
+}
+
+function modifyPassengerInfo() {
+				
+	$.ajax({
+		type:"POST",
+		url:"<%=basePath%>client/modifyFrequentContactInfo",
+		cache:false, 
+		data:{
+			name: $("#modifyPName").val(),
+			cardId: $("#modifyCardId").val(),
+			gender: $('input:radio[id="modifym"]:checked').val(),
+			isStudent: $("#modifyPassengerType").val(),
+			id: $("#id").val()
+	    },
+		success:function(data){
+			if(data.result=="yes"){
+					$("#modifyBox").fadeOut("fast");
+					$("#mask2").css({
+						display: 'none'
+					});
+					$('#content').load("<%=basePath%>client/showFrequentContacts");
+				}
+			}
+		});
+	}
+
+	function checkname() {
+		var name = document.getElementById("addPName").value.trim();
+		var c_name = /[\u4e00-\u9fa5]{2,10}$/;
+		if (!c_name.test(name)) {
+			document.getElementById("warnname").innerHTML = "*不能为空或一个字且请输入中文";
+			return false;
+		} else {
+			document.getElementById("warnname").innerHTML = "";
+			return true;
+		}
+	}
+
+	function checkcardid() {
+		var cardId = document.getElementById("cardId").value.trim();
+		var c_cardId = /(^\d{15}$)|(^\d{17}(\d|X)$)/;
+		if (!c_cardId.test(cardId)) {
+			document.getElementById("warnCard").innerHTML = "*输入正确的身份证号码(X请大写)";
+			return false;
+		} else {
+			document.getElementById("warnCard").innerHTML = "";
+			return true;
+		}
+	}
+	
+	function checkname1() {
+		var name = document.getElementById("modifyPName").value.trim();
+		var c_name = /[\u4e00-\u9fa5]{2,10}$/;
+		if (!c_name.test(name)) {
+			document.getElementById("warnname1").innerHTML = "*不能为空或一个字且请输入中文";
+			return false;
+		} else {
+			document.getElementById("warnname1").innerHTML = "";
+			return true;
+		}
+	}
+
+	function check() {
+		if (checkcardid() && checkname()) {
+			addPassenger();
+			return true;
+		} else {
+			alert("请完善信息");
+			return false;
+		}
+	}
+	
+	function check1() {
+		if (checkname1()) {
+			modifyPassengerInfo();
+			return true;
+		} else {
+			alert("请完善信息");
+			return false;
+		}
+	}
+</script>
+<body style="width: 1582px; margin: 0 auto; min-width: 1500px;">
+
+	<div class="order-item">
+		<div class="lay-hd">乘客信息</div>
+
+		<div id="frequentContactsTable"></div>
+	</div>
+
+		<div id="addBox">
+
+			<div class="row1">
+				添加乘客 <a href="javascript:void(0)" title="关闭窗口" class="close_btn"
+					id="closeBtn">×</a>
+			</div>
+
+
+			<div class="row">
+				姓名: <span class="inputBox"> <input type="text" id="addPName"
+					name="userName" onblur="checkname()" />
+				</span> <div style="float:left;margin-top: -35px;"><span id="warnname"><a href="javascript:void(0)" title="提示"
+					class="warning"></a></span></div>
+			</div>
+
+
+			<div class="row" style="clear: both;">
+				性别: <input type="radio" name="gender" checked="checked" value="1"
+					style="margin-left: 7px;" id="m" /><label for="m"> 男</label>&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="gender" value="0" id="f" /><label for="f">女</label>
+			</div>
+
+			<div class="row">
+				身份证号: <span class="inputBox"> <input type="text" id="cardId"
+					name="cardId" onblur="checkcardid()" />
+				</span><div style="float:left;margin-top: -35px;"><span id="warnCard"><a href="javascript:void(0)" title="提示"
+					class="warning"></a></span></div>
+			</div>
+
+
+			<div class="row" style="clear: both;">
+				乘客类别: <select
+					style="width: 160px; position: relative; left: 7px; top: 3px;"
+					id="addPassengerType" name="isStudent">
+					<option value="1">成人</option>
+					<option value="0">学生</option>
+				</select>
+			</div>
+
+			<button id="addPButton" onclick="check()">添加乘客</button>
+			<!-- <input id="addPButton" type="submit" value="添加乘客" /> -->
+		</div>
+
+		<div id="modifyBox" style="display: none;">
+			<input id="id" name="id" type="hidden" />
+			<div class="row1">
+				修改乘客信息 <a href="javascript:void(0)" title="关闭窗口" class="close_btn"
+					id="closeBtn_modify">×</a>
+			</div>
+
+			<div class="row">
+				姓名: <span class="inputBox"> <input type="text"
+					id="modifyPName" name="userName" onblur="checkname1()"
+					style="height: 27px; width: 230px;" value="${name }" />
+				</span> <div style="float:left;margin-top: -35px;"><span id="warnname1"><a href="javascript:void(0)" title="提示"
+					class="warning"></a></span></div>
+			</div>
+
+
+			<div class="row" style="clear: both;">
+				性别: <input type="radio" name="gender" checked="checked" value="1"
+					style="margin-left: 7px" id="modifym" /><label for="modifym">
+					男</label>&nbsp;&nbsp;&nbsp; <input type="radio" name="gender" value="0"
+					id="modifyf" /><label for="modifyf">女</label>
+			</div>
+
+			<div class="row">
+				身份证号: <span class="inputBox"> <input type="text"
+					id="modifyCardId" name="cardId" style="height: 27px; width: 230px; border:0px;" readonly/>
+				</span> <a href="javascript:void(0)" title="提示" class="warning" id="warn"></a>
+			</div>
+
+			<div class="row">
+				乘客类别: <select
+					style="width: 160px; position: relative; left: 7px; top: 3px;"
+					id="modifyPassengerType" name="isStudent">
+					<option value="1" id="modifyAdult">成人</option>
+					<option value="0" id="">学生</option>
+				</select>
+			</div>
+
+			<button id="modifyPButton" onclick="check1()">修改</button>
+			<!-- <input id="modifyPButton" type="submit" value="修改" /> -->
+		</div>
+
+	<button id="btn_addFrequentContacts">添加乘客</button>
+
+</body>
+</html>

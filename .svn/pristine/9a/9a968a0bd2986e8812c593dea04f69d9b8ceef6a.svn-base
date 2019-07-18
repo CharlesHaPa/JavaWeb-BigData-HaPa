@@ -1,0 +1,17 @@
+package com.sw1408.mapper;
+
+import java.util.List;
+
+import com.sw1408.po.User;
+
+
+
+public interface UserMapper {
+	
+	public User selectOneByNameAndAge(User user);
+	
+	public List<User> selectAllUser();
+	
+	public int insertOne(User user);
+
+}

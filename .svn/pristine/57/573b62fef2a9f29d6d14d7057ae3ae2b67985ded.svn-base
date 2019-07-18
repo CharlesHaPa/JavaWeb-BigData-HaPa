@@ -1,0 +1,44 @@
+package com.sw1408.test.mapper;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.sw1408.mapper.ItemMapper;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("/applicationContext.xml")
+public class ItemMappertest {
+	 @Autowired
+	 ItemMapper itemMapper;
+	 
+	 @Test
+	 public void shouldPrintSelectedItemById(){
+		 System.out.println(itemMapper.selectItemById(2));
+	 }
+
+	 @Test
+	 public void shouldPrintSelectedItemByTicketId() {
+	 	System.out.println(itemMapper.selectItemByTicketId(1));
+	 }
+
+	 @Test
+	public void shouldPrintSelectedItemsByClientIDAndCreateDateAndStatus() {
+	 	System.out.println(itemMapper.selectItemByClientIdAndCreateDateAndStaus(1, java.sql.Date.valueOf("2017-7-3"), "未支付"));
+	 }
+
+	 @Test
+	public void shouldPrintSelectedItemByStatusAndCreateDateRange() {
+	 	System.out.println(itemMapper.selectItemsByStatusAndCreateDateRange("未支付", java.sql.Date.valueOf("2017-7-1"), java.sql.Date.valueOf("2017-7-5")));
+	 }
+
+
+	@Test
+	public void shouldPrintSelectedItemByClientIdAndStatusAndCreateDateRange() {
+		System.out.println(itemMapper.selectItemByClientIdAndStatusAndCreateDateRange(1, "未支付", java.sql.Date.valueOf("2017-7-1"), java.sql.Date.valueOf("2017-7-5")));
+	}
+
+	
+}

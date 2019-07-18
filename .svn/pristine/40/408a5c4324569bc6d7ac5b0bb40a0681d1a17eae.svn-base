@@ -1,0 +1,29 @@
+package com.sw1408.service.impl;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.sw1408.mapper.ClientMapper;
+import com.sw1408.po.Client;
+import com.sw1408.service.ClientService;
+@Service
+public class ClientServiceImpl implements ClientService {
+	
+	@Resource ClientMapper clientMapper;
+
+	public Client login(String enterName, String psw) {
+		Client result=clientMapper.selectClientByEnterName(enterName);
+		if(result == null){
+			System.out.println("用户不存在");
+			return null;
+		}
+		else if(result.getPassword().equals(psw)){
+			System.out.println("登陆成功");
+			return result;
+		}
+		System.out.println("密码错误");
+		return null;
+	}
+
+}

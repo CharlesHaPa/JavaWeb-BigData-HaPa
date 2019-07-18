@@ -1,0 +1,14 @@
+package com.sw1408.service;
+
+/**
+ * Created by DLETC on 2017/7/4.
+ */
+public interface ItemService {
+    /**
+     * \
+     * @param id
+     * @return
+     * @author dkq
+     */
+    String queryItemDetail(int id);
+}

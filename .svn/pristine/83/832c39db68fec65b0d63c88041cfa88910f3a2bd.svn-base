@@ -1,0 +1,43 @@
+package com.sw1408.test.mapper;
+
+import com.sw1408.mapper.TrainMapper;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+/**
+ * Created by DLETC on 2017/7/4.
+ */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("/applicationContext.xml")
+public class TrainMapperTest {
+    @Autowired
+    TrainMapper trainMapper;
+
+    @Test
+    public void shouldPrintSelectedTrainById() {
+        System.out.println(trainMapper.selectTrainById(1));
+    }
+    
+    @Test
+    public void shouldDeleteTrainById() {
+    	// TODO: 
+    }
+    
+    @Test
+    public void shouldPrintSelectedTrainByTrainName(){
+    	System.out.println(trainMapper.selectTrainByTrainName("G1001"));
+    }
+    
+    @Test
+    public void shouldAddTrain() {
+    	// TODO: 
+    }
+
+    @Test
+    public void shouldPrintFirstTrainByName() {
+        System.out.println(trainMapper.selectFirstTrainByTrainName("G1001"));
+    }
+}

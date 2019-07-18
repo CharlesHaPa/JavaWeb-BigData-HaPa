@@ -1,0 +1,19 @@
+package com.sw1408.mapper;
+
+import com.sw1408.po.Client;
+
+public interface ClientMapper {
+    /**
+     *
+     * @param enterName
+     * @return
+     */
+    Client selectClientByEnterName(String enterName);
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    Client selectClientById(int id);
+}

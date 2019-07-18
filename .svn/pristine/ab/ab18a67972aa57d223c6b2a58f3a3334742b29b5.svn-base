@@ -1,0 +1,71 @@
+package com.sw1408.controller;
+
+import javax.annotation.Resource;
+
+import javax.servlet.http.HttpSession;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.sw1408.po.User;
+import com.sw1408.service.UserService;
+
+
+/**
+ * 
+ * 用户功能相关控制层
+
+ *
+ */
+
+@Controller
+public class UserController {
+	
+	@Resource
+	UserService userService;
+	
+	/**
+	 * 接收用户表单数据，实现登录功能
+	 * @param name 用户名称
+	 * @param age 用户年龄
+	 * @param session 获取session对象
+	 * @return ModelAndView
+	 */
+	@RequestMapping("/user/login")
+	public ModelAndView userLogin(String name,int age,HttpSession session){
+		ModelAndView modelAndView = new ModelAndView();
+		User user = new User(name, age);
+		User result = userService.userLogin(user);
+		if (result != null) {
+			modelAndView.setViewName("main/index");
+			//modelAndView.addObject("user", result);
+			session.setAttribute("user", result);
+			return modelAndView;
+		}
+		modelAndView.setViewName("user/error");
+		return modelAndView;
+	}
+	
+	@RequestMapping("/user/show")
+	public ModelAndView userInfo(){
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.addObject("list", userService.showUser());
+		modelAndView.setViewName("user/userInfo");
+		return modelAndView;
+	}
+	
+	@RequestMapping("/user/register")
+	public ModelAndView userRegister(User user){
+		ModelAndView modelAndView=new ModelAndView();
+		boolean result=userService.userRegister(user);
+		if(result){
+			modelAndView.addObject(user);
+			modelAndView.setViewName("main/index");
+			return modelAndView;
+		}
+		modelAndView.setViewName("user/userRegister");
+		return modelAndView;
+	}
+
+}

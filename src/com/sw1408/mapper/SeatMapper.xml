@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sw1408.mapper.SeatMapper">
+
+    <insert id="addSeat" parameterType="com.sw1408.po.Seat">
+        INSERT INTO SEAT(ROW_NUM,COL_NUM,CARRIAGE,TRAINID,USABLE,TYPE) VALUES(#{row},#{col},#{carriage},#{usable},#{type})
+    </insert>
+    
+    <update id ="updateSeatStatus">
+	    update seat
+	    set usable = #{1}
+	    where id = #{0}
+	</update>
+	
+	<select id = "selectOneSeatByid" parameterType="int" resultType = "com.sw1408.po.Seat">
+	    select * from seat where id = #{id}
+	</select>
+	
+	<select id="selectSeatById" resultType="com.sw1408.po.Seat">
+        SELECT * FROM SEAT WHERE ID = #{id}
+    </select>
+</mapper>

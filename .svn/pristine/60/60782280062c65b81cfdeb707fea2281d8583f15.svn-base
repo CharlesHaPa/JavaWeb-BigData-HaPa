@@ -1,0 +1,106 @@
+package com.sw1408.controller;
+import java.util.LinkedList;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import com.sw1408.po.Passenger;
+import com.sw1408.service.TicketService;
+import com.sw1408.vo.AvailableTrain;
+import com.sw1408.vo.TicketVo;
+import net.sf.json.JSONObject;
+
+
+@Controller
+public class TicketController {
+
+	@Resource
+	TicketService ticketService;
+	
+	@RequestMapping("ticket/queryTicket")
+	public ModelAndView queryTicket(HttpServletRequest request){
+		
+		ModelAndView modelAndView = new ModelAndView();
+		LinkedList<AvailableTrain> result = new LinkedList<AvailableTrain>();
+		try {
+			result = ticketService.queryTicket(request.getParameter("fromStation"), 
+						request.getParameter("toStation"), request.getParameter("departDate"));
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			modelAndView .setViewName("ticket/error");
+			return modelAndView;
+		}
+		
+		modelAndView .setViewName("ticket/resultList_"+request.getParameter("queryType"));
+		modelAndView.addObject("trains",result);
+		return modelAndView;
+	}
+
+
+	@RequestMapping(value = "/payTicket",produces="html/text;charset=UTF-8")
+	@ResponseBody
+	public String payTicket(HttpServletRequest request, @ModelAttribute TicketVo ticketVo) 
+					throws Exception {
+		try{
+			ticketVo.setClientId((Integer)request.getSession().getAttribute("clientId"));
+			return ticketService.payTicket(ticketVo);
+		}catch(Exception e){
+			return null;	
+		}		
+	}
+
+	//@RequestParam会将值匹配到id属性里
+	@ResponseBody
+	@RequestMapping(value="/returnTicket",method= RequestMethod.POST)
+	public boolean returnTicket(@RequestParam int itemId){
+		boolean result = ticketService.returnTicket(itemId);
+		return result;
+
+	}
+
+	
+	@RequestMapping(value = "ticket/endorse")
+	public String endorse(@RequestParam String isEndorse,int endorseItemId, HttpServletRequest request){
+		HttpSession session = request.getSession();
+		session.setAttribute("endorseItemId", endorseItemId);
+		session.setAttribute("isEndorse", isEndorse);
+		return "ticket/query";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/endorseAfterPay")
+	public boolean endorseAfterPay(@RequestParam int endorseItemId){
+		boolean result = ticketService.returnTicket(endorseItemId);
+		return result;
+	}
+	
+	@RequestMapping(value="ticket/cancelEndorse")
+	public void cancelEndorse(HttpServletRequest request){
+		HttpSession session = request.getSession();
+		session.removeAttribute("isEndorse");
+		session.removeAttribute("endorseItemId");
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="ticket/endorseInfo" ,produces="text/json;charset=UTF-8")
+	public String endorseInfo(@RequestParam int endorseItemId){
+		System.out.println("do successfully"+endorseItemId);
+		
+		Passenger passenger = ticketService.endorseInfo(endorseItemId);
+		if(null != passenger){
+			JSONObject jsonObject = JSONObject.fromObject(passenger);
+			System.out.println(jsonObject);
+			return jsonObject.toString();
+		}
+		else{
+			return null;
+		}
+	}
+}

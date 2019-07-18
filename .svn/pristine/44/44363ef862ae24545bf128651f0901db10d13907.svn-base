@@ -1,0 +1,24 @@
+package com.sw1408.test.service;
+
+import com.sw1408.service.ItemService;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+/**
+ * Created by DLETC on 2017/7/4.
+ */
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("/applicationContext.xml")
+public class ItemServiceTest {
+    @Autowired
+    private ItemService itemService;
+
+    @Test
+    public void shouldPrintItemDetail() {
+        System.out.println(itemService.queryItemDetail(1));
+    }
+}

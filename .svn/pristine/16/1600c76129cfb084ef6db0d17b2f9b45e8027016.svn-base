@@ -1,0 +1,375 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
+%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../main/css/bootstrap.css" />
+<link rel="stylesheet" href="../main/css/charles.css" />
+<!--login-->
+<link rel="stylesheet" href="../main/css/z_login.css" />
+<!--<link rel="stylesheet" href="../css/z_reg.css" />
+	<script type="text/javascript" src="../js/z_reg.js"></script>-->
+<script type="text/javascript" src="../main/js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="../main/js/z_login.js"></script>
+
+<!--主页-->
+<script type="text/javascript" src="../main/js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="../main/js/bootstrap.js"></script>
+<script type="text/javascript">
+	//动态刷新
+	$(function() {
+		$("#my_order").click(function() {
+			$("#content").load("../InfoManage/item.html");
+		})
+		$("#my_passenger").click(function() {
+			$("#content").load("../InfoManage/SXY-frequentContacts.html");
+		})
+		$("#my_info").click(function() {
+			$("#content").load("../InfoManage/info.html");
+		})
+		$("#my_security").click(function() {
+			$("#content").load("../InfoManage/security.html");
+		})
+		$("#my_insurance").click(function() {
+			$("#content").load("../InfoManage/insurance.html");
+		})
+		//帮助页面
+		$("#help_info").click(function() {
+			$("#content").load("../Help/help.html");
+		})
+		
+		/* $("#content").load("../train/getTrains"); */
+		//注册页面
+		/* $("#regist").click(function() {
+			$("#content").load("../client/regist");
+		}) */
+	});
+	
+	<%-- $(document).ready(function() {
+		if (<%=session.getAttribute("clientId") %> == null) {
+			console.log("未登录");
+			document.getElementById("login").setAttribute("display", "block");
+			document.getElementById("regist").setAttribute("display", "block");
+			document.getElementById("logout").setAttribute("display", "none");
+		} else {
+			if(<%=session.getAttribute("clientGender")%> == 1) {
+				console.log("登录成功");
+				document.getElementById("login-regist").innerHTML="您好，<%=session.getAttribute("clientName")%>先生";
+				document.getElementById("login").style.display="none";
+				document.getElementById("regist").style.display="none";
+				document.getElementById("logout").style.display="block";
+			} else {
+				console.log("登录成功");
+				document.getElementById("login-regist").innerHTML="您好，<%=session.getAttribute("clientName")%>女士";
+				document.getElementById("login").style.display="none";
+				document.getElementById("regist").style.display="none";
+				document.getElementById("logout").style.display="block";
+			}
+		}
+		
+	}); --%>
+	
+	var hasSession = <%=session.getAttribute("clientId") %>;
+	<%-- var gender = <%=session.getAttribute("clientGender")%>;
+	var name = '<%=session.getAttribute("clientName")%>'; --%>
+	
+	function validateSession() {
+		
+		//console.log(1111111);
+		if(hasSession == null) {
+			//console.log(2222222);
+			if(confirm("该操作需要您先登录，是否现在登录？")) {
+				//console.log(233333333);
+				$("#LoginBox").fadeIn("slow");
+			}
+		}
+	}
+	
+	function logout() {
+		<%session.invalidate();%>
+		window.location.replace("<%=basePath%>main/test");
+		console.log(111);
+	}
+	
+	function regist() {
+		window.location.replace("<%=basePath%>client/regist");
+	}
+	
+	function login(){
+		$.ajax({
+			type:"POST",
+			url:"<%=basePath %>client/login",
+			data:{
+				userName : $("#userName").val(),
+				psw : $("#psw").val()
+			},
+			dataType : 'json',
+			success:function(data){
+				if(data != "null"){
+					console.log(data);
+					console.log(data.userName);
+					if(data.gender == 1) {
+						console.log("登录成功");
+						document.getElementById("login-regist").innerHTML="您好，" + data.userName + "先生";
+						document.getElementById("login").style.display="none";
+						document.getElementById("regist").style.display="none";
+						document.getElementById("logout").style.display="block";
+					} else {
+						console.log("登录成功");
+						document.getElementById("login-regist").innerHTML="您好，" + data.userName + "女士";
+						document.getElementById("login").style.display="none";
+						document.getElementById("regist").style.display="none";
+						document.getElementById("logout").style.display="block";
+					}
+					$("#LoginBox").fadeOut("fast");
+					$("#mask").css({
+						display: 'none'
+					});
+				}
+			}
+		});
+	}
+	
+	<%-- function logout(){
+		$.ajax({
+			type:"POST",
+			url:"<%=basePath %>testAjax",
+			data:{
+				userName:"${#userName}",
+				psw:"${#psw}"
+			},
+			dataType : 'json',
+			success:function(success){
+				if(success.equals("success")){
+					if(<%=session.getAttribute("clientGender")%> == 1) {
+						console.log("登录成功");
+						document.getElementById("login-regist").innerHTML="您好，<%=session.getAttribute("clientName")%>先生";
+						document.getElementById("login").style.display="none";
+						document.getElementById("regist").style.display="none";
+						document.getElementById("logout").style.display="block";
+					} else {
+						console.log("登录成功");
+						document.getElementById("login-regist").innerHTML="您好，<%=session.getAttribute("clientName")%>女士";
+						document.getElementById("login").style.display="none";
+						document.getElementById("regist").style.display="none";
+						document.getElementById("logout").style.display="block";
+					}
+				} else{
+					alert("登录失败！");
+				}
+			}
+		});
+	} --%>
+</script>
+</head>
+<body style="width: 82.4%; margin: 0 auto; min-width: 1500px;">
+
+	<!-- 导航栏 -->
+	<div class="container" style="display: inline; font-size: large; " id="nav">
+		<ul class="nav nav-tabs row-fluid pull-right" >
+
+			<li class="active"><a href="<%=basePath%>main/test">首页</a></li>
+			<li><a href="#">车票预定</a></li>
+
+			<li class="dropdown"><a id="personal_Info" href="#"
+				class="dropdown-toggle" data-toggle="dropdown">我的Hapa<span
+					class="caret"></span></a>
+				<ul class="dropdown-menu">
+					<li><a href="#" id="my_info" onclick="validateSession()">编辑个人资料</a></li>
+					<li><a href="#" id="my_order" onclick="validateSession()">我的订单</a></li>
+					<li><a href="#" id="my_passenger" onclick="validateSession()">我的乘客</a></li>
+					<li><a href="#" id="my_insurance" onclick="validateSession()">我的保险</a></li>
+					<li><a href="#" id="my_security" onclick="validateSession()">帐号安全</a></li>
+				</ul></li>
+			<!--href="../Help/help.html"-->
+			<li><a href="#" id="help_info">帮助</a></li>
+			<li class="dropdown"><a href="#"  id="login-regist" class="dropdown-toggle"
+				data-toggle="dropdown">登录/注册<span class="caret"></span></a>
+				<ul class="dropdown-menu">
+					<li><a href="#" id="login" style="display:block;">登录</a></li>
+					<li><a href="#" id="regist" style="display:block;" onclick="regist()">注册</a></li>
+					<li><a href="#" id="logout" style="display:none;" onclick="logout()">注销</a></li>
+				</ul></li>
+
+		</ul>
+		<form action="<%=basePath%>client/login" method="post">
+			<div id="LoginBox">
+
+				<div class="row1">
+					登录窗口 <a href="javascript:void(0)" title="关闭窗口" class="close_btn"
+						id="closeBtn">×</a>
+				</div>
+
+				<div class="row">
+					用户名: <span class="inputBox"> <input type="text"
+						id="userName" name="userName" placeholder="账号/邮箱/手机号" />
+					</span> <a href="javascript:void(0)" title="提示" class="warning" id="warn">*不许为空</a>
+				</div>
+
+				<div class="row">
+					密&nbsp;&nbsp;&nbsp;&nbsp;码: <span class="inputBox"><input
+						type="password" id="psw" name="psw" placeholder="请输入密码" /></span> <a
+						href="javascript:void(0)" title="提示" class="warning" id="warn2">*不许为空</a>
+				</div>
+
+				<div class="row">
+					<a id="SearchPwd">忘记密码？</a> <input type="button" name=""
+						id="loginbtn" value="登录" onclick="login()" />
+					<!--   <input type="button" id="loginbtn" value="登录">-->
+				</div>
+
+			</div>
+		</form>
+	</div>
+
+	<!-- 轮播图  -->
+	<div id="myCarousel" class="carousel slide carousel-fade" data-ride="carousel">
+		<!-- Indicators -->
+		<ol class="carousel-indicators">
+			<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+			<li data-target="#myCarousel" data-slide-to="1"></li>
+			<li data-target="#myCarousel" data-slide-to="2"></li>
+		</ol>
+		<!-- Wrapper for slides -->
+		<div class="carousel-inner">
+			<div class="item active">
+				<img src="../main/img/banner_img1.png" alt="1">
+			</div>
+			<div class="item">
+				<img src="../main/img/banner_img2.png" alt="2">
+			</div>
+			<div class="item">
+				<img src="../main/img/banner_img3.png" alt="3">
+			</div>
+		</div>
+	</div>
+
+	<!-- 主页内容 -->
+	<div id="content" class="col-md-12">
+
+		<!-- 搜索框 -->
+		<div id="search" class="col-md-3">
+			<form class="form-inline"">
+				<div id="radio_div" class="col-md-12">
+					<div id="j_div" class="col-md-6">
+						<div class="radio-inline">
+							<label> <input type="radio" name="j_type" id="single"
+								value="single" checked> <label for="single"
+								class="input_label">单程</label>
+							</label>
+						</div>
+						<div class="radio-inline">
+							<label> <input type="radio" name="j_type" id="double"
+								value="double"> <label for="double" class="input_label">往返</label>
+							</label>
+						</div>
+					</div>
+					<div id="p_div" class="col-md-6">
+						<div class="radio-inline">
+							<label> <input type="radio" name="p_type" id="student"
+								value="student" checked> <label for="student"
+								class="input_label">学生</label>
+							</label>
+						</div>
+						<div class="radio-inline">
+							<label> <input type="radio" name="p_type" id="normal"
+								value="normal"> <label for="normal" class="input_label">普通</label>
+							</label>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="fromStation">出发地</label> <input type="text"
+						class="form-control" id="fromStation">
+				</div>
+				<div class="form-group">
+					<label for="toStation">目的地</label> <input type="text"
+						class="form-control" id="toStation">
+				</div>
+				<div class="form-group">
+					<label for="departDate" id="departDateLable">出发日</label> <input
+						type="date" class="form-control" id="departDate">
+				</div>
+				<div class="form-group">
+					<label for="returnDate" id="returnDateLable">返程日</label> <input
+						type="date" class="form-control" id="returnDate">
+				</div>
+				<div class="col-md-12" id="btn_div">
+
+					<button type="submit" class="btn-primary btn-lg" id="search_btn">查询</button>
+				</div>
+			</form>
+		</div>
+
+		<!-- 车次信息 -->
+		<div id="train" class="col-md-6 table-responsive">
+			<table class="table table-hover ">
+				<thead> 
+					<tr>
+	        			<td>车次</td>
+	        			<td>出发地</td>
+						<td>目的地</td>
+	        			<td>出发时间</td>
+						<td>到达时间</td>
+	        		</tr>
+				</thead>
+				<tbody>
+					<c:forEach items="${trainDetailList}" var="trainDetail" varStatus="status">
+					<tr>
+					    <td>${trainDetail.getString("trainName")}</td>
+	        			<td>${trainDetail.getString("startStation")}</td>
+	        			<td>${trainDetail.getString("endStation")}</td>
+						<td>${trainDetail.getString("startTime")}</td>
+						<td>${trainDetail.getString("endTime")}</td>
+					</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+		</div>
+
+		<!-- 信息栏  -->
+		<div id="info" class="col-md-3">
+
+			<!-- 公告栏 -->
+			<div class="panel panel-default">
+
+				<div class="panel-heading">公告</div>
+
+				<!-- List group -->
+				<ul class="list-group">
+					<li class="list-group-item">带列表组的面版带列表组的面版带列表组的面版</li>
+					<li class="list-group-item">带列表组的面版带列表组的面版带列表组的面版</li>
+					<li class="list-group-item">带列表组的面版带列表组的面版带列表组的面版</li>
+					<li class="list-group-item">带列表组的面版带列表组的面版带列表组的面版</li>
+					<li class="list-group-item">带列表组的面版带列表组的面版带列表组的面版</li>
+				</ul>
+			</div>
+			<!-- 乘车须知 -->
+			<div class="panel panel-default">
+				<div class="panel-heading">乘车须知</div>
+				<!-- List group -->
+				<ul class="list-group">
+					<li class="list-group-item">带列表组的面版带列表组的面版带列表组的面版</li>
+					<li class="list-group-item">带列表组的面版带列表组的面版带列表组的面版</li>
+					<li class="list-group-item">带列表组的面版带列表组的面版带列表组的面版</li>
+					<li class="list-group-item">带列表组的面版带列表组的面版带列表组的面版</li>
+					<li class="list-group-item">带列表组的面版带列表组的面版带列表组的面版</li>
+				</ul>
+			</div>
+		</div>
+		<!-- 法律信息 -->
+		<div id="footer" class="col-md-12">
+			<p>©2017-2018 DL_ETC_HaPa,Inc. All rights reserved.</p>
+		</div>
+</body>
+</html>

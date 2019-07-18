@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sw1408.mapper.SelectSeatMapper">
+
+	<select id="queryDepartTime" resultType="java.util.Date">
+		SELECT departTime FROM Schedule WHERE stationId=#{0} AND trainID=#{1}
+	</select>
+	
+	<select id="queryArriveTime" resultType="java.util.Date">
+		SELECT arriveTime FROM Schedule WHERE stationId=#{0} AND trainID=#{1}
+	</select>
+	
+	<select id="queryPath" resultType="String">
+		SElECT allpath from train where id = #{0}
+	</select>
+	<select id="findStationName" resultType="String">
+		select name from station where id = #{0}
+	</select>
+	<select id="findStationId" resultType="java.lang.Integer">
+		select id from station where name = #{0}
+	</select>
+	<select id="selectSeat" resultType="com.sw1408.po.Seat">
+	<bind name="path" value="'%'+ param1 +'%'"/>
+		select * from(Select * from seat where trainId = #{1} 
+		and usable like #{path} ) 
+		where ROWNUM  &lt; 2
+	</select>
+	<select id="queryDistance" resultType="java.lang.Integer">
+	select distance from DISTANCE
+	where (stationB=#{0} and stationA=#{1} ) or (stationA=#{0} and stationB=#{1})
+	</select>
+	<select id="queryCaculateMethod" resultType="double">
+	select methodType from CalculateMethod where seatType = #{0} and trainType = #{1}
+
+	</select>
+</mapper>

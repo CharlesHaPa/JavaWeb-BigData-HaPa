@@ -1,0 +1,61 @@
+package com.sw1408.controller;
+import java.util.List;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.sw1408.service.TicketService;
+import com.sw1408.vo.AvailableTrain;
+import com.sw1408.vo.TicketVo;
+
+
+@Controller
+public class TicketController {
+
+
+	
+	@Resource
+	TicketService ticketService;
+	
+	@RequestMapping("ticket/queryTicket")
+	public ModelAndView queryTicket(HttpServletRequest request){
+		ModelAndView modelAndView=new ModelAndView();
+		List<AvailableTrain> trains=ticketService.queryTicket(request.getParameter("fromStation"), 
+				request.getParameter("toStation"), request.getParameter("departDate"));
+		modelAndView.setViewName("ticket/resultList_"+request.getParameter("queryType"));
+		modelAndView.addObject("trains",trains);
+		return modelAndView;
+	}
+
+	@RequestMapping(value = "/payTicket")
+	public ModelAndView register(HttpServletRequest request, @ModelAttribute TicketVo ticketVo) 
+					throws Exception {
+		ModelAndView modelAndView=new ModelAndView();
+		ticketVo.setClientId(1);
+		ticketService.payTicket(ticketVo);	
+		System.out.println(ticketVo);
+	    modelAndView.setViewName("client/error");
+		return modelAndView;
+	}
+
+
+	//@RequestParam会将值匹配到id属性里
+	@ResponseBody
+	@RequestMapping(value="/returnTicket",method= RequestMethod.POST)
+	public boolean returnTicket(@RequestParam int itemId){
+		boolean result = ticketService.returnTicket(itemId);
+		return result;
+
+	}
+	
+	/*@RequestMapping("/show")
+	public String show(){
+		return "item/item";
+	}*/
+}

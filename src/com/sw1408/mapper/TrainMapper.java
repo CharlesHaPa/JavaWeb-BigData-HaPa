@@ -1,0 +1,50 @@
+package com.sw1408.mapper;
+
+import com.sw1408.po.Train;
+
+import java.sql.Date;
+import java.util.List;
+
+/**
+ * Created by DLETC on 2017/6/30.
+ */
+public interface TrainMapper {
+    /**
+     *
+     * @param id
+     * @return
+     */
+    Train selectTrainById(int id);
+
+    /**
+     *
+     * @param id
+     */
+    void deleteTrainById(int id);
+
+    /**
+     *
+     * @param trainName
+     * @return
+     */
+    List<Train> selectTrainByTrainName(String trainName);
+
+    /**
+     *
+     * @param trainName
+     * @param stationId
+     * @param departDate
+     * @return
+     */
+    Train selectTrainByTrainNameAndStationIdAndDepartDate(String trainName, int stationId, Date departDate);
+
+    /**
+     *
+     * @param train
+     */
+    void addTrain(Train train);
+    
+    List<String> selectTrainNames();
+
+    Train selectFirstTrainByTrainName(String trainName);
+}

@@ -1,0 +1,19 @@
+.price_box {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #F0E9D6;
+    background-color: #FFFAED;
+}
+
+.price_box .basefix .float_right {
+    margin-top: -6px;
+}
+
+.price_box .base_price {
+    padding-right: 5px;
+    font-size: 36px;
+}
+.base_price {
+    color: #F60;
+    font: normal 18px Tahoma;
+}

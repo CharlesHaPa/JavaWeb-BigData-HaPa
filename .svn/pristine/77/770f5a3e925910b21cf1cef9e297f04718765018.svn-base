@@ -1,0 +1,29 @@
+package com.sw1408.controller;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.sw1408.po.InsuranceInfo;
+import com.sw1408.service.InsuranceService;
+
+@Controller
+public class InsuranceInfoController {
+	@Resource
+	InsuranceService insuranceService;
+	
+	@RequestMapping("/client/insurance")
+	public ModelAndView showInsuranceInfo(){
+		int id = 1;
+		List<InsuranceInfo> list = insuranceService.showInsuranceInfo(id);
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.addObject("CurrentInsurance",list);
+		modelAndView.setViewName("/client/insurance");
+		return modelAndView;
+		
+	}
+}

@@ -1,0 +1,166 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+		<meta charset="UTF-8">
+		<title>item</title>
+	</head>
+	<link rel="stylesheet" href="item/css/zpp.css" />
+	<script type="text/javascript" src="item/js/jquery-3.2.1.min.js"></script>
+	<script type="text/javascript" src="item/js/zpp.js" ></script>
+
+	<!-- <body style="width:82.4%;margin: 0 auto;min-width: 1500px;">
+		
+		<div class="content">
+
+
+			<div class="order-item">
+
+
+				<div class="lay-hd">已完成订单</div>
+					<div class="order-tab-bd">
+
+						<div class="order-select">
+						    <span style="margin-left: 100px;">
+								<select id="selectItemType">
+									<option value="itemUnfinished">未完成订单</option>
+									<option value="itemFinished" selected="selected">已完成订单</option>
+									<option value="unPay">未支付订单</option>
+								</select>
+							</span>
+							<span style="margin-left: 100px;">
+								<select name="select-condition" id ="selectType">
+									<option value="byDepartDate">按乘车日期查询</option>
+									<option value="byItemDate" selected="selected" >按订票日期查询</option>
+						        </select>
+							</span>
+							
+							<span style="margin-left: 90px;margin-right: 90px;">查询日期</span>
+					        <input id="fromDate" type="date" name="fromDate" />
+					        <span style="margin-left: 90px;"><input id="toDate" type="date" name="toDate" /></span>
+					        <span style="margin-left: 90px;text-align: center;"><input id="information" type="text" name="selectedByItemID" placeholder="订单号/车次/乘客姓名"/></span>
+					        <span style="margin-left: 100px;"><button type="submit">查询</button></span> 
+						</div>	     
+					<div class="order-item-bd">
+
+							<table class="table-c">
+
+								<tr class="order_head">
+									<th width="37">序号</th>
+									<th width="145">车次信息</th>
+									<th width="120">席位信息</th>
+									<th width="100" >旅客信息</th>
+									<th width="110">票款金额</th>
+									<th width="100">车票状态</th>
+									<th>操作</th>
+								</tr>
+								<tr>
+									<td><input type="checkbox" class="check" />
+										<label>1</label>
+									</td>
+									<td>
+										<div class="ccxx">2013-03-16 7:30开<br clear="none" /> G42 北京南-上海虹桥</div>
+									</td>
+									<td>软卧 08车厢<br clear="none" /> 27号 上铺 </td>
+									<td>刘某<br clear="none" /> 二代身份证
+									</td>
+									<td>成人票<span class="colorA">409.5元</span>
+									</td>
+									<td>已支付</td>
+									<td>
+										<button type="button" onclick="fun_return()"  class="open_rec_interface">退票</button></span>
+										<button type="button" onclick=""  class="open_rec_interface">改签</button></span> 
+									</td>
+								</tr>
+								<tr>
+									<td colspan="7">
+										<div class="t-foot"><span style="margin-left: 900px;">订单号：<strong>E160802101</strong></span>
+								            <span style="margin-left: 50px;">总金额：<strong class="colorA">819.0元</strong></span>
+							            </div>
+							            <div class="cline"></div>
+									</td>
+								</tr>
+								
+								<tr class="order_head">
+									<th width="37" style="margin-left: 40px;">序号</th>
+									<th width="145">车次信息</th>
+									<th width="120">席位信息</th>
+									<th width="100" >旅客信息</th>
+									<th width="110">票款金额</th>
+									<th width="100">车票状态</th>
+									<th>操作</th>
+								</tr>
+								<tr>
+									<td><input type="checkbox" class="check" />
+										<label>1</label>
+									</td>
+									<td>
+										<div class="ccxx">2013-03-16 7:30开<br clear="none" /> G42 北京南-上海虹桥</div>
+									</td>
+									<td>软卧 08车厢<br clear="none" /> 27号 上铺 </td>
+									<td>刘某<br clear="none" /> 二代身份证
+									</td>
+									<td>成人票<span class="colorA">409.5元</span>
+									</td>
+									<td>已支付</td>
+									<td>
+										<button type="button" onclick="fun_return()"  class="open_rec_interface">退票</button>
+										<button type="button" onclick=""  class="open_rec_interface">改签</button>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="7">
+										<div class="t-foot"><span style="margin-left: 900px;">订单号：<strong>E160802101</strong></span>
+								            <span style="margin-left: 50px;">总金额：<strong class="colorA">819.0元</strong></span>
+							            </div>
+							            <div class="cline"></div>
+									</td>
+								</tr>
+							</table>
+						</div>
+			</div>
+		</div>
+		
+		退票弹窗开始
+		<div class="returnTicket">
+
+					<div class="re_head">
+					    <span style="margin-left: 30px;">交易提示</span>
+					    <a href="#" class="re_close"><span style="margin-left: 452px; color: white;font-size: 18px;">X</span></a>
+					</div>
+					<div class="re_body">
+						<div class="re_body_left">
+							<img src="item/img/doubt.jpg" width="155px" height="207px" />
+						</div>
+						<div class ="re_body_right">
+							<span style="font-size: 18px;"><b>您确定要退票吗？<br>共计退款：</b></span>
+							<span style="font-size: 18px;color: #FF8000;"><b>166.5元</b></span>
+						    <span style="font-size: 14px;color: #666666;"><br>车票票款：<b>175.5元</b>，退票费：当前时间按</span>
+						    <span style="font-size: 14px;color: #FF8000;">5%</span>
+						    <span style="font-size: 14px;color: #666666;">核收，计为<b>9元</b><br>应退票款：</span>
+						    <span style="font-size: 15px;color: #FF8000;"><b>166.5元</b></span>
+						    <span style="font-size: 14px;color: #666666;"><br>实际核收退票费及应退票款将按最终交易时间计算<br></span>
+						    <p>
+						    	<input type="button" value="取消" class="re_close" style="margin-top: 10px;width: 90px;height: 30px;
+						    	             margin-left: 45px;border-radius: 5px;margin-right: 60px;cursor: pointer;"/>
+						    	<input type="submit" value="确定" onclick="returnConfirm()" style="margin-top: 10px;width: 90px;height: 30px;color: white;
+						    		         background-color: #FF8000; border-radius: 5px;cursor: pointer;"/>
+						    </p>
+						</div>
+					</div>
+					<div class="dividing_line">
+						<hr style="border: 1px dashed #666666;width: 590px;"></hr>
+					</div>
+					<div class="re_foot">
+						&nbsp;&nbsp;退票费按如下规则核收：票面乘车站开车时间前15天（不含）以上不收取退票费，48小时以上的按票价5%计，24小时以上、不足48小时的 按票价10%计，不足24小时的按票价20%计。改签或变更到站后的车票乘车日期在春运期间的，退票时一律按开车时间前不足24小时标准核收退票费。<br>
+	
+					</div>
+		        </div>
+		退票弹窗结束
+	
+     用于覆盖当前界面的灰色界面
+     <div class="returnTicket_cover"></div>
+	</body> -->
+
+</html>

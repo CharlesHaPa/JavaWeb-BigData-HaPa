@@ -1,0 +1,8 @@
+package com.sw1408.service;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public interface ItemService {
+    String queryItemDetail(int id);
+}

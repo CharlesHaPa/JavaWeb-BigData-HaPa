@@ -1,0 +1,91 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
+%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<%
+	request.setCharacterEncoding("utf-8");
+%>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+ label.error{
+ 	color: red;
+ }
+</style>
+</head>
+<link rel="stylesheet" href="../client/css/SXY-addFrequentContacts.css" />
+<script type="text/javascript" src="../plugins/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="../plugins/JqueryValidate/js/jquery.validate.js"></script>
+<script type="text/javascript" src="../plugins/JqueryValidate/js/messages_zh_SXY.js"></script>
+<script type="text/javascript">
+	$(function() {
+		$("#form_addFrequentContacts").validate({
+			onblur:true,
+			rules:{
+				name:{
+					required:true
+				},
+				cardId:{
+					required:true,
+					rangelength:[18,18]
+				}
+			}
+		});
+	});
+</script>
+<style type="text/css">
+
+	label.error{
+		color: red;
+		font-size:12px;
+	}
+	
+</style>
+<body style="min-width: 700px;font-size:19px">
+
+	<div class="main">
+		<div class="order-item">
+			<div class="lay-hd">添加乘客</div>
+			<form id="form_addFrequentContacts" name="form_addFrequentContacts"
+				action="<%=basePath%>client/addPassenger">
+
+				<div>
+					<br /> &nbsp;
+	
+					<br /> <br />
+					<div class="addPassenger_message">
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="red">*</span>姓名：<input
+							type="text" style="width: 160px;" id="name" name="name" /><br /><br /><br />
+						<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+							class="red">*</span>性别： <input type="radio" name="gender" id="m"
+							checked="checked" value="1" /><label for="m"> 男</label>&nbsp;&nbsp;&nbsp; <input
+							type="radio" name="gender" value="0" id="f" /><label for="f">女</label><br /> <br />
+	
+						<br /> <br /> <span class="red">*</span>身份证号： <input
+							type="text" style="width: 160px;" id="cardId" name="cardId" /> <br />
+						<br />  <br /> <br />
+					</div>
+
+
+					<div class="addPassenger_message">
+						<span class="red">*</span>乘客类别： <select style="width:160px;"
+							id="passengerType" name="isStudent">
+							<option value="1">成人</option>
+							<option value="0">学生</option>
+						</select>
+					</div>
+				</div>
+				<input id="btn_addFrequentContacts" type="submit" value="添加乘客" />
+			</form>
+		</div>
+	</div>
+
+</body>
+
+</html>

@@ -1,0 +1,68 @@
+package com.sw1408.service.impl;
+
+import java.sql.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.sw1408.mapper.PassengerMapper;
+import com.sw1408.mapper.SelectSeatMapper;
+import com.sw1408.mapper.TicketMapper;
+import com.sw1408.po.Passenger;
+import com.sw1408.po.Seat;
+import com.sw1408.po.Ticket;
+import com.sw1408.service.TicketService;
+import com.sw1408.util.SeatUtil;
+import com.sw1408.vo.InsuranceVo;
+import com.sw1408.vo.TicketVo;
+
+import oracle.net.aso.i;
+@Service
+public class TicketServiceImpl implements TicketService {
+	@Resource
+	SelectSeatMapper selectSeatMapper;
+	@Resource
+	TicketMapper ticketMapper;
+	@Resource
+	PassengerMapper passengerMapper;
+	
+	public boolean payTicket(TicketVo ticketVo){
+		Passenger passenger=ticketVo.getPassenger();
+		int passengerId = passengerMapper.selectIdByCardId(passenger.getCardId());
+		if(passengerId==0){
+			passengerMapper.insertOne(passenger);
+			passengerId = passengerMapper.selectIdByCardId(passenger.getCardId());
+		}
+		String ticketType=passenger.getIsStudent()==1?"学生票":"成人票";
+		String path = selectSeatMapper.queryPath(ticketVo.getTrainId());
+		int departureId= selectSeatMapper.findStationId(ticketVo.getDeparture());
+		int arriveId= selectSeatMapper.findStationId(ticketVo.getArrival());
+		String needPath =SeatUtil.getNeedPath(path, departureId, arriveId);
+		Seat seat = selectSeatMapper.selectSeat(needPath,ticketVo.getTrainId());
+		String usable =SeatUtil.changeUsable(path, departureId,arriveId);
+		Ticket ticket=new Ticket(seat.getId(),passengerId,ticketType,"已购买",ticketVo.getPrice(),
+				departureId,arriveId);
+		ticketMapper.createTicket(ticket);
+		ticketMapper.updateSeat(seat.getId(),usable);
+		double totalFee = ticketVo.getPrice();
+		for(int i=0;i<ticketVo.getInsurancePrice().length;i++){
+			totalFee+=ticketVo.getInsurancePrice()[i];
+		}
+		ticketMapper.createItem(ticketVo.getClientId(),seat.getId(), 
+				departureId, arriveId, "已购买",
+				new Date(System.currentTimeMillis()), 
+				new Date(System.currentTimeMillis()), 
+				totalFee);
+		for(int i=0;i<ticketVo.getInsuranceId().length;i++){
+			ticketMapper.addInsurance(ticketVo.getClientId(), seat.getId(),
+					passengerId,ticketVo.getInsuranceId()[i]);
+		}
+		System.out.println(ticket);
+		return false;
+	}
+}

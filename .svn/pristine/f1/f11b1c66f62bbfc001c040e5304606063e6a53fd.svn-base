@@ -1,0 +1,82 @@
+package com.sw1408.po;
+
+import java.util.Date;
+
+public class Client {
+
+	private String userName;
+	private String password;
+	private String cardId;
+	private int gender;
+	private String address;
+	private Date date;
+	private String email;
+	private String telephone;
+	
+	//Empty constructor
+	public Client() {}
+	
+	/*Constructor with (String userName, String password, String cardId, int gender, String address, 
+	 * Date date, String email, String telephone)*/
+	public Client(String userName, String password, String cardId, int gender, String address, Date date, String email,
+			String telephone) {
+		super();
+		this.userName = userName;
+		this.password = password;
+		this.cardId = cardId;
+		this.gender = gender;
+		this.address = address;
+		this.date = date;
+		this.email = email;
+		this.telephone = telephone;
+	}
+	
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public String getCardId() {
+		return cardId;
+	}
+	public void setCardId(String cardId) {
+		this.cardId = cardId;
+	}
+	public int getGender() {
+		return gender;
+	}
+	public void setGender(int gender) {
+		this.gender = gender;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public Date getDate() {
+		return date;
+	}
+	public void setDate(Date date) {
+		this.date = date;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getTelephone() {
+		return telephone;
+	}
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
+	}
+}

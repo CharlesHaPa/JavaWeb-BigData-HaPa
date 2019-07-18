@@ -1,0 +1,30 @@
+package com.sw1408.test.service;
+
+import com.sw1408.service.TrainService;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+/**
+ * Created by DLETC on 2017/7/5.
+ */
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("/applicationContext.xml")
+public class TrainServiceTest {
+    @Autowired
+    TrainService trainServicee;
+
+    @Test
+    public void shouldPrintTrainDetail() {
+        System.out.println(trainServicee.queryTrainDetail(1));
+    }
+
+    @Test
+    public void shoulPirntTrainsOfToday() {
+        System.out.println(trainServicee.queryTrainDetailOfToday());
+    }
+}
+

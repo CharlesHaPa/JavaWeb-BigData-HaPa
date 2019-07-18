@@ -1,0 +1,46 @@
+package com.sw1408.po;
+
+public class Passenger {
+	
+	private String name;
+	private String cardId;
+	private int gender;
+	private int isStudent;
+
+	//Empty constructor
+	public Passenger(){}
+	
+	//Constructor with name(String), cardId(String), gender(int) and isStudent(int)
+	public Passenger(String name, String cardId, int gender, int isStudent) {
+		super();
+		this.name = name;
+		this.cardId = cardId;
+		this.gender = gender;
+		this.isStudent = isStudent;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getCardId() {
+		return cardId;
+	}
+	public void setCardId(String cardId) {
+		this.cardId = cardId;
+	}
+	public int getGender() {
+		return gender;
+	}
+	public void setGender(int gender) {
+		this.gender = gender;
+	}
+	public int getIsStudent() {
+		return isStudent;
+	}
+	public void setIsStudent(int isStudent) {
+		this.isStudent = isStudent;
+	}
+}

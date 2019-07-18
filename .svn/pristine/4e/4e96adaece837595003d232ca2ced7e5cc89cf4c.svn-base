@@ -1,0 +1,49 @@
+.guanggao{
+	height: 300px;
+    width: 159px;
+	position: absolute;
+	background: grey;
+	font-size: x-large;
+	color: greenyellow;
+	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+}
+#ad1 {
+	float: left;
+	left: 0px;
+	top: 0;
+}
+
+#ad2 {
+	float: right;
+	right: 0px;
+	top: 0;
+}
+
+#ad1-1 {
+	position: absolute;
+	top: 200px;
+	display: block;
+	height: 22px;
+	width: 98px;
+	text-align: center;
+	border: 1px dashed;
+	cursor: pointer;
+	font-size: 20px;
+	color: black;
+}
+#ad2-1{
+	position: absolute;
+	top: 200px;
+	display: block;
+	height: 22px;
+	width: 98px;
+	text-align: center;
+	border: 1px dashed;
+	cursor: pointer;
+	font-size: 20px;
+	color: black;
+}
+.ad{
+	width: 158px;
+    height: 270px;
+}

@@ -1,0 +1,103 @@
+package com.sw1408.controller;
+
+import java.sql.ResultSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import org.json.JSONObject;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+import com.sw1408.service.AdminService;
+
+import net.sf.json.JSONArray;
+
+@Controller
+public class AdminController {
+	@Resource
+	private AdminService adminService;
+
+	@ResponseBody
+	@RequestMapping(value = "/admin/famale", produces = "text/json;charset=UTF-8")
+	public String getFamaleAnalysis(HttpServletRequest request) {
+		String result = adminService.getFamaleAnalysis(request.getParameter("year"));
+		return result;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/admin/male", produces = "text/json;charset=UTF-8")
+	public String getMaleAnalysis(HttpServletRequest request) {
+		String result = adminService.getMaleAnalysis(request.getParameter("year"));
+		return result;
+	}
+
+	@RequestMapping("admin/count")
+	@ResponseBody
+	public List<String> itemCount(@RequestParam String countByYear) {
+		System.out.println(countByYear);
+		List<String> list = adminService.countItemByHour(countByYear);
+		System.out.println("list:" + list);
+		return list;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/admin/showTicketsNumGroupByCity", produces = "text/json;charset=UTF-8")
+	public String showTicketsNumGroupByCity(HttpServletRequest request) {
+		
+		if (request.getSession().getAttribute("finalResult"+request.getParameter("year")) != null
+				) {
+			return (String) request.getSession().getAttribute("finalResult"+request.getParameter("year"));
+		} else {
+			System.out.println(request);
+			String year = (String) request.getParameter("year");
+			System.out.println("year=" + year);
+			JSONArray result = null;
+			ResultSet resultSet = adminService.showTop5TicketsNumGroupByCity(year);
+			int allNum = 0;
+			int num = 0;
+			int extraNum = 0;
+			String finalResult = null;
+			Map<String, Integer> map = new HashMap<>();
+
+			try {
+				allNum = adminService.showAllTicketsNum(year);
+				while (resultSet.next()) {
+					num += resultSet.getInt("num");
+					map.put(resultSet.getString("city"), resultSet.getInt("num"));
+				}
+				System.out.println(num);
+				extraNum = allNum - num;
+				System.out.println(extraNum);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+
+			System.out.println(map);
+
+			try {
+				result = JSONArray.fromObject(map);
+				finalResult = result.toString().substring(0, result.toString().length() - 1) + ",{\"num\":\"" + extraNum
+						+ "\",\"city\":\"其他\"}]";
+				System.out.println(finalResult);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			request.getSession().setAttribute("finalResult"+year, finalResult);
+			request.getSession().setAttribute("year", year);
+			return finalResult;
+		}
+
+	}
+
+	@RequestMapping("/admin/aaa")
+	public ModelAndView haha() {
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("/admin/showTicketsNumGroupByCity");
+		return modelAndView;
+	}
+}

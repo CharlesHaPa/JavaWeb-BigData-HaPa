@@ -1,0 +1,179 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8" import="java.util.List" import="java.util.Date"
+%>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
+%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<script type="text/javascript">
+
+$(function(){
+		
+		//判断用户是否继续改签
+		var isEndorse = <%=session.getAttribute("isEndorse")%>;
+		if(isEndorse == true){
+			var result = window.confirm('您正在进行车票改签操作，是否继续改签');
+			if(result == false){
+			
+				$.get("<%=basePath%>ticket/removeEndorse");
+			}
+		}
+	
+		$("#model_btn").click(function(){		
+			var val=$('input:radio[id="double"]:checked').val();
+			var departDate=new Date($('#departDate').val()).getTime(); 
+			var returnDate=new Date($('#returnDate').val()).getTime();
+			if(val=='on'){
+	 			if(returnDate<departDate || isNaN(departDate) || isNaN(returnDate)){
+					alert("输入日期格式不符！");
+					return(0);
+				} 
+				querySingleTicket();
+				$("#returnResult").show();
+				queryDoubleTicket();
+		    }
+			else {
+				if(isNaN(departDate)){
+					alert("输入日期格式不符！");
+					return(0);
+				} 
+				querySingleTicket()
+				$("#returnResult").hide();
+			}
+		})
+		$(".radio").click(function(){
+			changeButtonState();
+		});
+		$(window).ready(function(){
+			changeButtonState();
+
+		});
+		$("#departDate").val(getNowFormatDate());
+		$("#departDate").attr("min",getNowFormatDate());;
+		querySingleTicket();
+		function changeButtonState(){
+			var val = $('input:radio[id="double"]:checked').val();
+			if (val == 'on') {
+				$('#returnDate').removeAttr("disabled", "disabled");
+			} else {
+				$('#returnDate').attr("disabled", "disabled");
+			}
+		};
+		function querySingleTicket(){
+			$("#goResult").load("<%=basePath%>ticket/queryTicket", {
+
+				fromStation : $("#fromStation").val(),
+				toStation : $("#toStation").val(),
+				departDate : $("#departDate").val(),
+				queryType:1
+			});
+		};
+		function queryDoubleTicket(){
+			$("#returnResult").load("<%=basePath%>ticket/queryTicket", {
+
+				fromStation : $("#toStation").val(),
+				toStation : $("#fromStation").val(),
+				departDate : $("#returnDate").val(),
+				queryType:2
+			});
+		};
+
+		function getNowFormatDate() {
+		    var date = new Date();
+		    var seperator1 = "-";
+		    var month = date.getMonth() + 1;
+		    var strDate = date.getDate();
+		    if (month >= 1 && month <= 9) {
+		        month = "0" + month;
+		    }
+		    if (strDate >= 0 && strDate <= 9) {
+		        strDate = "0" + strDate;
+		    }
+		    var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate;	   
+		    return currentdate;
+		}
+	})
+</script>
+</head>
+<body>
+
+	<!--搜索组件-->
+	<div id="searchBox">
+
+		<div id="journeyType">
+			<ul>
+				<li><input id="single" name="j_type" type="radio"
+					checked="checked" class="radio"> <label for="single"
+					id="single_lable" class="cursor">单程</label></li>
+				<li><input id="double" name="j_type" type="radio" class="radio">
+					<label for="double" id="double_lable" class="cursor">往返</label></li>
+			</ul>
+		</div>
+
+		<script>
+		    var cityPicker = new IIInsomniaCityPicker({
+		        data: cityData,
+		        target: '#fromStation',
+		        valType: 'k-v',
+		        hideCityInput: '#fcity',
+		        hideProvinceInput: '#fprovince',
+		        callback: function(city_id){
+		        }
+		    });
+		
+		    cityPicker.init();
+		    var cityPicker2 = new IIInsomniaCityPicker({
+		        data: cityData,
+		        target: '#toStation',
+		        valType: 'k-v',
+		        hideCityInput: '#tcity',
+		        hideProvinceInput: '#tprovince',
+		        callback: function(city_id){
+		        }
+		    });	
+		    cityPicker2.init();
+		</script>
+		<div id="placeSearch">
+
+			<ul>
+				<li><label id="fromStation_lable">出发地</label> <input type="text" id="fromStation" name="fromStation" value="株洲"/>
+					<input type="hidden" id="fprovince" value="">
+					<input type="hidden" id="fcity" value=""></li>
+				<li><label>目的地</label> <input type="text" id="toStation" name="toStation" value="大理"/>
+					<input type="hidden" id="tprovince" value="">
+					<input type="hidden" id="tcity" value=""></li>
+				<li><label>出发日</label> <input type="date" id="departDate" />
+				    
+				</li>
+				<li><label>返程日</label> <input type="date" id="returnDate" disabled="disabled"/></li>
+			</ul>
+		</div>
+
+		<div id="btn">
+
+			<input type="button" id="model_btn" value="查询" />
+
+		</div>
+
+
+
+	</div>
+
+
+	<!--单程搜索结果-->
+	<div id="goResult" class="result"></div>
+
+
+	<!--返程搜索结果-->
+	<div id="returnResult" class="result"></div>
+
+</body>
+</html>

@@ -1,0 +1,7 @@
+package com.sw1408.service.impl;
+
+import com.sw1408.service.AdminService;
+
+public class AdminServiceImpl implements AdminService {
+
+}

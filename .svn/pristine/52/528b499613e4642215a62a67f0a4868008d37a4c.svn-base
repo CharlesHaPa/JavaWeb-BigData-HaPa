@@ -1,0 +1,67 @@
+package com.sw1408.po;
+
+import net.sf.json.JSONObject;
+
+import java.sql.Date;
+
+/**
+ * Created by DLETC on 2017/7/3.
+ */
+public class Schedule {
+    private Integer id;
+    private Integer trainId;
+    private Integer stationId;
+    private Date arriveTime;
+    private Date departTime;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getTrainId() {
+        return trainId;
+    }
+
+    public void setTrainId(Integer trainId) {
+        this.trainId = trainId;
+    }
+
+    public Integer getStationId() {
+        return stationId;
+    }
+
+    public void setStationId(Integer stationId) {
+        this.stationId = stationId;
+    }
+
+    public Date getArriveTime() {
+        return arriveTime;
+    }
+
+    public void setArriveTime(Date arriveTime) {
+        this.arriveTime = arriveTime;
+    }
+
+    public Date getDepartTime() {
+        return departTime;
+    }
+
+    public void setDepartTime(Date departTime) {
+        this.departTime = departTime;
+    }
+
+    @Override
+    public String toString() {
+        JSONObject map = new JSONObject();
+        map.put("id", id);
+        map.put("trainID", trainId);
+        map.put("stationId", stationId);
+        map.put("arriveTime", arriveTime.toString());
+        map.put("departTime", departTime.toString());
+        return map.toString();
+    }
+}

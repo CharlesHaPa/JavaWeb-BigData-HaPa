@@ -1,0 +1,62 @@
+package com.sw1408.test.mapper;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.sw1408.mapper.PassengerMapper;
+import com.sw1408.po.Passenger;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("/applicationContext.xml")
+public class PassengerMapperTest {
+	@Autowired
+	PassengerMapper passengerMapper;
+	
+	@Test
+    public void shouldInsertOne() {
+		Passenger passenger = new Passenger();
+		passenger.setName("小胖子");
+		passenger.setCardId("250");
+		passenger.setGender(1);
+		passenger.setIsStudent(1);
+        passengerMapper.insertOne(passenger);
+    }
+	
+	@Test
+    public void shouldInsertOne_c_to_p() {
+        
+    }
+	
+	@Test
+    public void shouldPrintSelectedIdByCardId() {
+        System.out.println(passengerMapper.selectIdByCardId("123"));
+    }
+	
+	@Test
+    public void shouldPrintSelectedAll() {
+        System.out.println(passengerMapper.selectAll(1));
+    }
+	
+	@Test
+    public void shouldUpdateInfo() {
+        
+    }
+	
+	@Test
+    public void shouldDeleteOneByCardId() {
+        
+    }
+	
+	@Test
+    public void shouldDeleteOne_c_to_pByCardId() {
+        
+    }
+
+    @Test
+    public void shouldPrintSelectedPassengerByname() {
+	    System.out.println(passengerMapper.selectPassengerByName("zpp"));
+    }
+}

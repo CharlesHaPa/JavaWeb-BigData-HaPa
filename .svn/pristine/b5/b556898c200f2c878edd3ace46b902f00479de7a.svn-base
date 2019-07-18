@@ -1,0 +1,57 @@
+package com.sw1408.service;
+
+import java.util.List;
+
+import com.sw1408.po.Client;
+import com.sw1408.po.Passenger;
+import com.sw1408.util.PageParams;
+
+public interface ClientService {
+	
+	public Client login(String enterName, String psw);
+	
+	/**
+	 * 调用PassengerMapper中的insertOne方法，向Passenger表中添加一条数据；
+	 * 之后调用PassengerMapper中的selectIdByCardId方法，
+	 * 通过passenger的cardId来查找到passenger的id，并添加到passenger对象中；最后，
+	 * 调用insertOne_c_to_p方法， 向ClientToPassenger 表中添加对应数据
+	 * 
+	 * @author SXY
+	 * @param passenger
+	 *            乘客对象
+	 * @param client
+	 *            用户对象
+	 * @return boolean - Mark success
+	 */
+	public boolean addPassenger(Passenger passenger, Client client);
+
+	/**
+	 * 调用PassengerMapper中的selectAll方法，并返回查找到的List<Passenger>
+	 * 
+	 * @author SXY
+	 * @param clientId
+	 *            Client's id
+	 * @return List<Passenger> - List of passengers
+	 */
+	public List<Passenger> selectAllPassengers(PageParams pageParams, int clientId);
+
+	/**
+	 * 调用PassengerMapper中的updateInfo方法，若返回值大于0则返回true，代表更新成功，否则返回false，代表更新失败
+	 * 
+	 * @author SXY
+	 * @param passenger
+	 *            乘客对象
+	 * @return boolean - Mark success
+	 */
+	public boolean updatePassengerInfo(Passenger passenger);
+
+	/**
+	 * 删除一条乘客信息
+	 * 
+	 * @author SXY
+	 * @param passenger
+	 *            乘客对象
+	 * @return boolean
+	 */
+	public boolean deletePassenger(Passenger passenger);
+}

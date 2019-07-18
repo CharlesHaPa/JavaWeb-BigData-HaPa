@@ -1,0 +1,70 @@
+package com.sw1408.service.impl;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.Date;
+
+import org.springframework.stereotype.Service;
+
+import com.sw1408.service.AdminService;
+import com.sw1408.util.DateUtil;
+import com.sw1408.util.HiveUtil;
+
+import net.sf.json.JSONArray;
+@Service
+public class AdminServiceImpl implements AdminService {
+	public String getSeatInfo(String departure,String arrival,String date){
+		HiveUtil hiveUtil =new HiveUtil();
+		JSONArray jsonObject = new JSONArray();
+		String sql="select train.type ,schedule.DEPARTTIME,count(*) from TICKET,seat join train on seat.TRAINID = train.id,schedule" 
+				+" where departure = '{d}' and arrival= '{a}' "
+				+ "and TICKET.STATUS = '已经出票' and TICKET.SEATID = seat.id "
+				+" and schedule.trainid = train.id and schedule.STATIONID = '{d}' and "
+				+" schedule.DEPARTTIME BETWEEN to_date('{D1} 00:00:00') and to_date('{D2} 23:59:59')"
+				+" group by train.type,schedule.DEPARTTIME order by schedule.DEPARTTIME";
+			sql = sql.replace("{d}", getId(departure)+"").replace("{a}", getId(arrival)+"");
+			try {
+				sql = sql.replace("{D1}", DateUtil.caculateDate(date, 7)).replace("{D2}", date);
+			} catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		ResultSet res=hiveUtil.executeQuery(sql);
+		int[][] count =new int[3][7];
+		int[] flag={0,0,0};
+		try {
+			while (res.next()) {			 
+				       if(res.getString(1).equals("G")){
+				    	   count[0][flag[0]++] = Integer.parseInt(res.getString(3));
+				       }else if(res.getString(1).equals("D")){
+				    	   count[1][flag[1]++] = Integer.parseInt(res.getString(3)); 
+				       }else if(res.getString(1).equals("K")){
+				    	   count[2][flag[2]++] = Integer.parseInt(res.getString(3)); 
+				       }
+				       
+				}
+			jsonObject = JSONArray.fromObject(count);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return jsonObject.toString();		
+	}
+	public int getId(String station){
+		String sql = "select id from station where name = '"+station+"'";
+		HiveUtil hiveUtil =new HiveUtil();
+		ResultSet res=hiveUtil.executeQuery(sql);
+		try {
+			if (res.next()){
+				
+				System.out.println(Double.parseDouble(res.getString(1)));
+				return (int)Double.parseDouble(res.getString(1));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return -1;
+	}
+}

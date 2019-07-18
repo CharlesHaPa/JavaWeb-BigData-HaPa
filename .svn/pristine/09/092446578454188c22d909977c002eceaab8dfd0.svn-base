@@ -1,0 +1,27 @@
+package com.sw1408.controller;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import com.sw1408.po.Client;
+import com.sw1408.service.ClientService;
+
+@Controller
+public class ClientController {
+	
+	@Resource ClientService clientService;
+	
+	@RequestMapping(value="/client/login",method=RequestMethod.POST)	
+	public String login(String enterName,String psw,HttpServletRequest request,Model model){
+		
+		Client result=clientService.login(request.getParameter("enterName"),
+				request.getParameter("psw"));
+//		System.out.println(result);
+		model.addAttribute("clientId", result.getId());
+		model.addAttribute("clientName", result.getUserName());
+		return "client/success";
+	}
+
+}

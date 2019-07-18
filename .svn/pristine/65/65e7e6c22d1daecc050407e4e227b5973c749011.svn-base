@@ -1,0 +1,212 @@
+package com.sw1408.service.impl;
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.Resource;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import com.sw1408.mapper.ItemMapper;
+import com.sw1408.mapper.SeatMapper;
+import com.sw1408.mapper.QueryTicketMapper;
+import java.sql.Date;
+import com.sw1408.mapper.PassengerMapper;
+import com.sw1408.mapper.SelectSeatMapper;
+import com.sw1408.mapper.TicketMapper;
+import com.sw1408.po.Item;
+import com.sw1408.po.Passenger;
+import com.sw1408.po.Seat;
+import com.sw1408.po.Ticket;
+import com.sw1408.service.TicketService;
+import com.sw1408.util.AvailableSeat;
+import com.sw1408.vo.AvailableTrain;
+import com.sw1408.util.SeatUtil;
+import com.sw1408.vo.TicketVo;
+
+@Service
+public class TicketServiceImpl implements TicketService {
+
+	@Resource private ItemMapper itemMapper;
+	@Resource private TicketMapper ticketMapper;
+	@Resource private SeatMapper seatMapper;
+	@Resource QueryTicketMapper queryTicketMapper;
+	@Resource SelectSeatMapper selectSeatMapper;
+	@Resource
+	PassengerMapper passengerMapper;
+	
+	@Transactional(propagation=Propagation.REQUIRED,isolation=Isolation.SERIALIZABLE)
+	public List<AvailableTrain> queryTicket(String fromStation,String toStation,String departDate){
+		
+		Integer fromStation_id=queryTicketMapper.getStationId(fromStation);
+		Integer toStation_id=queryTicketMapper.getStationId(toStation);
+
+		//可选火车Id
+		
+		List<Integer> trainIds=queryTicketMapper.queryTrains(departDate, fromStation_id, toStation_id);
+		//返回Json数组
+		
+		ArrayList<AvailableTrain> availableTrains=new ArrayList<AvailableTrain>();
+		ArrayList<String> types=new ArrayList<String>();
+		
+
+		for(Integer trainId:trainIds) {
+			
+			//获取车类型 
+			String trainType=queryTicketMapper.getTrainType(trainId);
+			List<AvailableSeat> seats=new ArrayList<AvailableSeat>();
+			
+			//查询一辆车的所有座位类型
+			types=queryTicketMapper.getTypes(trainId);
+			
+			//获取出发时间到达时间
+			String startDate=queryTicketMapper.getStartDate(trainId,fromStation_id);
+			String endDate=queryTicketMapper.getEndDate(trainId,toStation_id);
+			
+			//计算间隔时间
+			Integer intervalTotalMin=queryTicketMapper.getIntervalMin(trainId, toStation_id, fromStation_id)+1;
+			Integer intervalHour=intervalTotalMin/60;
+			Integer intervalMin=intervalTotalMin-60*intervalHour;
+			
+
+			//初始化待选座数据 初始化价格
+			for (String type : types) {
+				float distance=queryTicketMapper.getDistance(toStation_id, fromStation_id);
+				float x=queryTicketMapper.getX(trainType, type);
+				String price=new java.text.DecimalFormat("#.00").format(x*distance/1000);
+				AvailableSeat initialSeat=new AvailableSeat(type,0,price);
+				seats.add(initialSeat);
+			}
+			String trainName=queryTicketMapper.getTrainName(trainId);
+			List<AvailableSeat> availableSeats=queryTicketMapper.querySeats(fromStation_id,toStation_id,trainId);
+			
+			//赋值余票数
+			for (AvailableSeat seat : seats) {
+				for (AvailableSeat availableSeat : availableSeats) {
+					if(seat.getType().equals(availableSeat.getType())){
+						seat.setSeatCount(availableSeat.getSeatCount());
+					}
+				}
+			}
+			//添加一条结果
+			AvailableTrain availableTrain=new AvailableTrain(trainId,trainName,trainType,fromStation,toStation,startDate,endDate,
+					intervalHour,intervalMin,seats);
+			availableTrains.add(availableTrain);
+		}
+		return availableTrains;
+	}
+		
+
+	@Transactional(propagation=Propagation.REQUIRED,isolation=Isolation.SERIALIZABLE)
+	public String payTicket(TicketVo ticketVo){
+		Passenger passenger=ticketVo.getPassenger();
+		int passengerId;
+		try {
+			passengerId = passengerMapper.selectIdByCardId(passenger.getCardId());
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("sss");
+			e.printStackTrace();
+			passengerMapper.insertOne(passenger);
+			passengerId = passengerMapper.selectIdByCardId(passenger.getCardId());
+		}
+		String ticketType=passenger.getIsStudent()==1?"学生票":"成人票";
+		double ticketPrice=passenger.getIsStudent()==1?ticketVo.getPrice():ticketVo.getPrice()*0.5;
+		String path = selectSeatMapper.queryPath(ticketVo.getTrainId());
+		int departureId= selectSeatMapper.findStationId(ticketVo.getDeparture().trim());
+		int arriveId= selectSeatMapper.findStationId(ticketVo.getArrival().trim());
+		String needPath =SeatUtil.getNeedPath(path, departureId, arriveId);
+		Seat seat = selectSeatMapper.selectSeat(needPath,ticketVo.getTrainId(),ticketVo.getSeatType());
+		String usable =SeatUtil.changeUsable(path, departureId,arriveId);
+		Ticket ticket=new Ticket(seat.getId(),passengerId,ticketType,"已经出票",ticketPrice,
+				departureId,arriveId);
+		try {
+			ticketMapper.createTicket(ticket);
+			ticketMapper.updateSeat(seat.getId(),usable);
+			double totalFee = ticketPrice;
+			
+			for(int i=0;ticketVo.getInsurancePrice()!=null&&i<ticketVo.getInsurancePrice().length;i++){
+				totalFee+=ticketVo.getInsurancePrice()[i];
+			}
+			ticketMapper.createItem(ticketVo.getClientId(),seat.getId(), 
+					departureId, arriveId, "购买成功",
+					new Date(System.currentTimeMillis()), 
+					new Date(System.currentTimeMillis()), 
+					totalFee);
+			for(int i=0;ticketVo.getInsurancePrice()!=null&&i<ticketVo.getInsuranceId().length;i++){
+				ticketMapper.addInsurance(ticketVo.getClientId(), seat.getId(),
+						passengerId,ticketVo.getInsuranceId()[i]);
+			}
+			System.out.println(seat.seatInfo());
+			return seat.seatInfo();
+		} catch (Exception e) {
+		    e.printStackTrace();
+			return null;
+		}
+	}
+	
+	
+	public boolean returnTicket(int itemId){
+		//itemResult，ticketResult，seatResult分别表示item表、ticket表和seat表更新行数，
+		int ticketResult,itemResult,seatResult,seatId,ticketId,position1,position2;
+		String status = "退票";
+		String usable;
+		String subUsable1,subUsable2,subUsable3;
+		
+		//更新item表
+		Item item = itemMapper.selectItemByItemId(itemId);
+		itemResult = itemMapper.updateItemByItemId(itemId, status);
+		
+		//更新ticket表
+		ticketId = item.getTicketId();
+		ticketResult = ticketMapper.updateTicketStatus(ticketId, status);
+		
+		Ticket ticket = ticketMapper.selectTicketById(itemId);
+		
+		if(null == ticket){
+			System.out.println("This ticket does not exist!");
+			return false;
+		}
+		
+		System.out.println(ticket.toString());
+		seatId = ticket.getSeatId();
+		Seat seat = seatMapper.selectOneSeatByid(seatId);
+		
+		if(null == seat){
+			System.out.println("This seat does not exist!");
+			return false;
+		}
+		
+		//更改usable属性值
+		usable = seat.getUsable();
+		System.out.println(usable);
+		position1 = usable.indexOf(ticket.getDeparture().toString());
+		System.out.println("ticketS:"+ticket.getDeparture().toString());
+		position2 = usable.indexOf(ticket.getArrival().toString());
+		System.out.println("ticketE:"+ticket.getArrival().toString());
+		System.out.println(position1);
+		System.out.println(position2);
+		
+		if(-1 != position1 && -1 != position2){
+			subUsable1 = usable.substring(0, position1);
+			subUsable2 = usable.substring(position1, position2);
+			subUsable3 = usable.substring(position2, usable.length());
+			subUsable2 = subUsable2.replaceAll("\\+", "-");
+			usable = subUsable1 + subUsable2 +subUsable3;
+		}
+		else{
+			System.out.println("Error!");
+			return false;
+		}
+		
+		//更新seat表
+		seatResult = seatMapper.updateSeatStatus(seatId, usable);
+		
+		if (0 != (itemResult & ticketResult & seatResult)) {
+			return true;
+		}
+		else{
+			return false;
+		}
+	    
+	}
+}

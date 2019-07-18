@@ -1,0 +1,143 @@
+package com.sw1408.vo;
+
+import java.util.Date;
+
+public class SeatVo {
+	private int seatId;
+	private int trainId;
+	private String seatType;
+	private String row;
+	private String col;
+	private String carriage;
+	private String trainName;
+	private String departure;
+	private String arrival;
+	private String departTime;
+	private String arriveTime;
+	private String departDate;
+	private String arriveDate;
+	private String during;
+	private double price;
+	public SeatVo(int seatId, int trainId, String seatType, String row, String col, String carriage, String trainName,
+			String departure, String arrival, String departTime, String arriveTime, String departDate, String arriveDate,
+			String during, double price) {
+		super();
+		this.seatId = seatId;
+		this.trainId = trainId;
+		this.seatType = seatType;
+		this.row = row;
+		this.col = col;
+		this.carriage = carriage;
+		this.trainName = trainName;
+		this.departure = departure;
+		this.arrival = arrival;
+		this.departTime = departTime;
+		this.arriveTime = arriveTime;
+		this.departDate = departDate;
+		this.arriveDate = arriveDate;
+		this.during = during;
+		this.price = price;
+	}
+	public SeatVo() {
+
+	}
+	public int getSeatId() {
+		return seatId;
+	}
+	public void setSeatId(int seatId) {
+		this.seatId = seatId;
+	}
+	public int getTrainId() {
+		return trainId;
+	}
+	public void setTrainId(int trainId) {
+		this.trainId = trainId;
+	}
+	public String getseatType() {
+		return seatType;
+	}
+	public void setseatType(String seatType) {
+		this.seatType = seatType;
+	}
+	public String getRow() {
+		return row;
+	}
+	public void setRow(String row) {
+		this.row = row;
+	}
+	public String getCol() {
+		return col;
+	}
+	public void setCol(String col) {
+		this.col = col;
+	}
+	public String getCarriage() {
+		return carriage;
+	}
+	public void setCarriage(String carriage) {
+		this.carriage = carriage;
+	}
+	public String getTrainName() {
+		return trainName;
+	}
+	public void setTrainName(String trainName) {
+		this.trainName = trainName;
+	}
+	public String getDeparture() {
+		return departure;
+	}
+	public void setDeparture(String departure) {
+		this.departure = departure;
+	}
+	public String getArrival() {
+		return arrival;
+	}
+	public void setArrival(String arrival) {
+		this.arrival = arrival;
+	}
+	public String getDepartTime() {
+		return departTime;
+	}
+	public void setDepartTime(String departTime) {
+		this.departTime = departTime;
+	}
+	public String getArriveTime() {
+		return arriveTime;
+	}
+	public void setArriveTime(String arriveTime) {
+		this.arriveTime = arriveTime;
+	}
+	public String getDepartDate() {
+		return departDate;
+	}
+	public void setDepartDate(String departDate) {
+		this.departDate = departDate;
+	}
+	public String getArriveDate() {
+		return arriveDate;
+	}
+	public void setArriveDate(String arriveDate) {
+		this.arriveDate = arriveDate;
+	}
+	public String getDuring() {
+		return during;
+	}
+	public void setDuring(String during) {
+		this.during = during;
+	}
+	public double getPrice() {
+		return price;
+	}
+	public void setPrice(double price) {
+		this.price = price;
+	}
+	@Override
+	public String toString() {
+		return "SeatVo [seatId=" + seatId + ", trainId=" + trainId + ", seatType=" + seatType + ", row=" + row
+				+ ", col=" + col + ", carriage=" + carriage + ", trainName=" + trainName + ", departure=" + departure
+				+ ", arrival=" + arrival + ", departTime=" + departTime + ", arriveTime=" + arriveTime + ", departDate="
+				+ departDate + ", arriveDate=" + arriveDate + ", during=" + during + ", price=" + price + "]";
+	}
+
+
+}

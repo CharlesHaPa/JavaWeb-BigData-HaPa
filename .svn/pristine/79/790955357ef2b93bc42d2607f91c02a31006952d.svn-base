@@ -1,0 +1,46 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+		 pageEncoding="UTF-8"%>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
+%>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="<%=basePath%>client/css/fws.css" />
+	   <script type="text/javascript" src="<%=basePath%>js/jquery-3.2.1.min.js"></script>
+		<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+		<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+	</head>
+	<body style="width:82.4%;margin: 0 auto;min-width: 1500px;">
+			<div id="insuranceInformationDisplay">
+				<div class="lay-hd" style="width: 1582px;">用户保险信息</div>
+					<div id="insuranceTable">
+						<table class="table table-hover" width="600px" height="200px" style="font-size: 20px;">
+
+							<tr>
+								<th>订单号</th>
+								<th>购买时间</th>
+								<th>保险类型</th>
+								<th>保险公司</th>
+								<th>保险描述</th>
+								<th>价格</th>
+							</tr> 
+							<c:forEach items="${CurrentInsurance}" var="item">
+								<tr>
+									<td>${item.getId()}</td>
+									<td>${item.getCreateDate().toString()}</td>
+									<td>${item.getType()}</td>
+									<td>${item.getCompanyName()}</td>
+									<td>${item.getDescription()}</td>
+									<td>${item.getPrice()}</td>
+								</tr>
+							</c:forEach>
+					</table>
+				</div>
+			</div>
+	</body>
+</html>

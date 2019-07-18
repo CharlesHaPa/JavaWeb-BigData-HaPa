@@ -1,0 +1,25 @@
+package com.sw1408.test.mapper;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.sw1408.mapper.TicketMapper;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("/applicationContext.xml")
+public class TicketMapperTest {
+    @Autowired
+    TicketMapper ticketMapper;
+    @Test
+    public void shouldPrintSelectedTicketById() {
+        System.out.println(ticketMapper.selectTicketById(1));
+    }
+
+    @Test
+    public void shouldPrintSelectedTicketByPassengerId() {
+        System.out.println(ticketMapper.selectTicketById(1));
+    }
+}

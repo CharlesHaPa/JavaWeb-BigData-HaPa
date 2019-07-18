@@ -1,0 +1,73 @@
+package com.sw1408.po;
+
+import net.sf.json.JSONObject;
+
+public class Passenger {
+
+	private Integer id;
+	private String name;
+	private String cardId;
+	private Integer gender;
+	private Integer isStudent;
+
+	// Empty constructor
+	public Passenger() {
+	}
+
+	// Constructor with name(String), cardId(String), gender(int) and
+	// isStudent(int)
+	public Passenger(Integer id, String name, String cardId, Integer gender, Integer isStudent) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.cardId = cardId;
+		this.gender = gender;
+		this.isStudent = isStudent;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getCardId() {
+		return cardId;
+	}
+
+	public void setCardId(String cardId) {
+		this.cardId = cardId;
+	}
+
+	public Integer getGender() {
+		return gender;
+	}
+
+	public void setGender(int gender) {
+		this.gender = gender;
+	}
+
+	public Integer getIsStudent() {
+		return isStudent;
+	}
+
+	public void setIsStudent(int isStudent) {
+		this.isStudent = isStudent;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	@Override
+	public String toString() {
+		return JSONObject.fromObject(this).toString();
+	}
+
+}

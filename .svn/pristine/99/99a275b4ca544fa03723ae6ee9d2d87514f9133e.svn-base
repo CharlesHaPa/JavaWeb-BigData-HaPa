@@ -1,0 +1,507 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
+%>
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta charset="utf-8">
+<title>HaPa</title>
+<meta name="viewport">
+<link rel="stylesheet" href="<%=basePath%>assets/css/bootstrap.min.css" />
+<link rel="stylesheet" href="<%=basePath%>main/css/charles.css" />
+<link rel="stylesheet" href="<%=basePath%>main/css/z_login.css" />
+<link rel="stylesheet" href="<%=basePath%>main/css/cityPicker.css" />
+<link rel="stylesheet" href="<%=basePath%>main/css/table_scroll.css">
+<link rel="stylesheet" href="<%=basePath %>main/css/cityPicker.css">
+<script type="text/javascript" src="<%=basePath%>assets/js/jquery-3.1.1.js"></script>
+<script type="text/javascript" src="<%=basePath%>assets/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="<%=basePath%>main/js/z_login.js"></script>
+<script type="text/javascript" src="<%=basePath%>main/js/table_scroll.js"></script>
+<script type="text/javascript" src="<%=basePath %>main/js/cityData.js"></script>
+<script type="text/javascript" src="<%=basePath %>main/js/cityPicker.js"></script>
+<script type="text/javascript">
+//动态刷新
+var isLogin;
+
+$(function() {
+
+	    //首页查票
+		$("#search_btn").click(function(){
+			var val=$('input:radio[id="double"]:checked').val();
+			var departDate=new Date($('#departDate').val()).getTime(); 
+			var returnDate=new Date($('#returnDate').val()).getTime();
+			if(val=='on'){
+	 			if(returnDate<departDate || isNaN(returnDate)){
+					alert("输入日期格式不符！");
+					return(0);
+				} 
+	 			$('#content').hide();
+	 			$("#goResult").show();
+				querySingleTicket();
+				$("#returnResult").show();
+				queryDoubleTicket();
+		    }
+			else {
+				$('#content').hide();
+				$("#goResult").show();
+				querySingleTicket()
+				$("#returnResult").hide();
+			}
+		})
+		$(".radio").click(function(){
+			changeButtonState();
+		});
+		$(window).ready(function(){
+			changeButtonState();
+		});
+		$("#departDate").val(getNowFormatDate());
+		$("#departDate").attr("min",getNowFormatDate());;
+		function changeButtonState(){
+			var val = $('input:radio[id="double"]:checked').val();
+			if (val == 'on') {
+				$('#returnDate').removeAttr("disabled", "disabled");
+			} else {
+				$('#returnDate').attr("disabled", "disabled");
+			}
+		};
+		function querySingleTicket(){
+			$("#goResult").load("<%=basePath%>ticket/queryTicket", {
+
+				fromStation : $("#fromStation").val(),
+				toStation : $("#toStation").val(),
+				departDate : $("#departDate").val(),
+				queryType:1
+			});
+		};
+		function queryDoubleTicket(){
+			$("#returnResult").load("<%=basePath%>ticket/queryTicket", {
+
+				fromStation : $("#toStation").val(),
+				toStation : $("#fromStation").val(),
+				departDate : $("#returnDate").val(),
+				queryType:2
+			});
+		};
+		function getNowFormatDate() {
+		    var date = new Date();
+		    var seperator1 = "-";
+		    var month = date.getMonth() + 1;
+		    var strDate = date.getDate();
+		    if (month >= 1 && month <= 9) {
+		        month = "0" + month;
+		    }
+		    if (strDate >= 0 && strDate <= 9) {
+		        strDate = "0" + strDate;
+		    }
+		    var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate;	    
+		    
+		    return currentdate;
+		}
+	
+	$('.a_button').click(function(){
+            //验证是否登陆
+			$('#content').show();
+			$("#returnResult").hide();
+			$("#goResult").hide();
+            if(isLogin==1){
+            	var current=$(this),
+    			target=current.find('input').attr('id');
+    			$.get(target,function(data){
+    				$('#content').html(data);
+    			}); 
+            }
+            else{
+            	if(confirm("该操作需要您先登录，是否现在登录？")) {
+    				$("#LoginBox").fadeIn("slow");
+    			}
+            }
+	});
+		
+	$('.b_button').click(function(){
+			var current=$(this),
+			target=current.find('input').attr('id');
+			$.get(target,function(data){
+				$('#content').show();
+				$("#returnResult").hide();
+				$("#goResult").hide();
+				$('#content').html(data);
+			});
+	}); 
+	
+	
+});
+
+//页面加载判断session域中是否有用户信息
+$(window).ready(function(){
+
+	if(<%=session.getAttribute("clientId")%> != null){
+		isLogin=1;
+		if(<%=session.getAttribute("clientGender")%> == 1) {
+			document.getElementById("login-regist").innerHTML="您好，" + "<%=session.getAttribute("clientName")%>" + "先生";
+			document.getElementById("login").style.display="none";
+			document.getElementById("regist").style.display="none";
+			document.getElementById("logout").style.display="block";
+		} else {
+			document.getElementById("login-regist").innerHTML="您好，" + "<%=session.getAttribute("clientName")%>" + "女士";
+			document.getElementById("login").style.display="none";
+			document.getElementById("regist").style.display="none";
+			document.getElementById("logout").style.display="block";
+		}
+	}
+	else{
+		isLogin=0;
+	}
+});		
+	
+function regist() {
+	window.location.replace("<%=basePath%>client/regist");
+}
+
+function logout(){
+	$.ajax({
+		type:"GET",
+		url:"<%=basePath %>client/logout",
+		cache:false, 
+		success:function(data){
+			/* alert(data.result); */
+			location.reload();
+		}
+	});
+}
+
+function login(){
+	
+	$.ajax({
+		type:"POST",
+		url:"<%=basePath %>client/login",
+		cache:false, 
+		data:{
+			userName : $("#userName").val(),
+			psw : $("#psw").val()
+	},
+	dataType : 'json',
+	success:function(data){
+
+		if(data != "null"){
+			console.log(data);
+			console.log(data.userName);
+			isLogin=1;
+			if(data.gender == 1) {
+			    console.log("登录成功");
+				document.getElementById("login-regist").innerHTML="您好，" + data.userName + "先生";
+				document.getElementById("login").style.display="none";
+				document.getElementById("regist").style.display="none";
+				document.getElementById("logout").style.display="block";
+			} else {
+				console.log("登录成功");
+				document.getElementById("login-regist").innerHTML="您好，" + data.userName + "女士";
+				document.getElementById("login").style.display="none";
+				document.getElementById("regist").style.display="none";
+				document.getElementById("logout").style.display="block";
+			}
+			$("#LoginBox").fadeOut("fast");
+			$("#mask").css({
+						display: 'none'
+					});
+				}
+			}
+		});
+
+	}
+	
+// 页面加载时自动加载当天车次信息	
+
+
+$(window).ready(function() {
+	$.ajax({
+    	type: "POST",
+        url: "/HaPa/train/getTrains",
+        data: {},
+        dataType: "json",
+        success: function(data){
+        	var x = "";
+        	for (i in data.trainDetails) {
+        		var d = data.trainDetails[i];
+        		x += "<tr>";
+        		x += "<td> &nbsp &nbsp &nbsp &nbsp &nbsp" + d.trainName + "</td>";
+        		x += "<td>" + d.startStation + "</td>";
+        		x += "<td>" + d.endStation + "</td>";
+        		x += "<td>" + d.startTime + "</td>";
+        		x += "<td>" + d.endTime + "</td>";
+        		x+= "</tr>";
+        	}
+        	document.getElementById("trainList").innerHTML = x;
+        }
+    });
+	
+});
+
+
+</script>
+<script type="text/javascript">
+		    var cityPicker = new IIInsomniaCityPicker({
+		        data: cityData,
+		        target: '#fromStation',
+		        valType: 'k-v',
+		        hideCityInput: '#fcity',
+		        hideProvinceInput: '#fprovince',
+		        callback: function(city_id){
+		        }
+		    });
+		
+		    cityPicker.init();
+		    var cityPicker2 = new IIInsomniaCityPicker({
+		        data: cityData,
+		        target: '#toStation',
+		        valType: 'k-v',
+		        hideCityInput: '#tcity',
+		        hideProvinceInput: '#tprovince',
+		        callback: function(city_id){
+		        }
+		    });
+		
+		    cityPicker2.init();
+		</script>
+</head>
+<body>
+
+	<!-- 导航栏 -->
+	<div class="container" style="display: inline; font-size: large;" id="nav">
+		<ul class="nav nav-tabs row-fluid pull-right">
+			<li ><a href="<%=basePath%>main/test">首页</a></li>
+			<li class="b_button"><a href="javascript:void(0);">车票预定</a><input
+				id="<%=basePath%>ticket/query" style="display: none"></li>
+
+			<li class="dropdown"><a id="personal_Info" href="#"
+				class="dropdown-toggle" data-toggle="dropdown">我的Hapa<span
+					class="caret"></span></a>
+				<ul class="dropdown-menu">
+
+					<li class="a_button"><a href="javascript:void(0);">个人信息</a><input
+						id="<%=basePath%>client/query" style="display: none"></li>
+					<li class="a_button"><a href="javascript:void(0);">我的订单</a><input
+						id="<%=basePath%>item/personalItem" style="display: none"></li>
+					<li class="a_button"><a href="javascript:void(0);">我的乘客</a><input
+						id="<%=basePath%>client/showFrequentContacts"
+						style="display: none"></li>
+					<li class="a_button"><a href="javascript:void(0);">我的保险</a><input
+						id="<%=basePath%>client/insurance" style="display: none"></li>
+
+
+				</ul></li>
+
+			<li class="b_button"><a href="javascript:void(0);">帮助</a><input
+				id="<%=basePath%>main/help" style="display: none"></li>
+			<li class="dropdown"><a href="#" id="login-regist"
+				class="dropdown-toggle" data-toggle="dropdown">登录/注册<span
+					class="caret"></span></a>
+				<ul class="dropdown-menu">
+
+					<li><a  id="login" style="display:block;" >登录</a></li>
+					<li><a  id="regist" style="display:block;" onclick="regist()">注册</a></li>
+					<li><a  id="logout"  style="display:none;" onclick="logout()">注销</a></li>
+
+				</ul>
+			</li>
+
+		</ul>
+			<div id="LoginBox">
+
+				<div class="row1">
+					登录窗口 <a href="javascript:void(0)" title="关闭窗口" class="close_btn"
+						id="closeBtn">×</a>
+				</div>
+
+				<div class="row">
+					用户名: <span class="inputBox"> <input type="text"
+						id="userName" name="userName" placeholder="邮箱/手机号" />
+					</span> <a href="javascript:void(0)" title="提示" class="warning" id="warn">*不许为空</a>
+				</div>
+
+				<div class="row">
+					密&nbsp;&nbsp;&nbsp;&nbsp;码: <span class="inputBox"><input
+						type="password" id="psw" name="psw" placeholder="请输入密码" /></span> <a
+						href="javascript:void(0)" title="提示" class="warning" id="warn2">*不许为空</a>
+				</div>
+
+				<div class="row">
+					<a id="SearchPwd">忘记密码？</a> <input type="button" name=""
+						id="loginbtn" value="登录" onclick="login()" />
+					
+				</div>
+
+			</div>
+	</div>
+
+	<!-- 轮播图  -->
+	<div id="myCarousel" class="carousel slide carousel-fade" data-ride="carousel">
+		<!-- Indicators -->
+		<ol class="carousel-indicators">
+			<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+			<li data-target="#myCarousel" data-slide-to="1"></li>
+			<li data-target="#myCarousel" data-slide-to="2"></li>
+		</ol>
+		<!-- Wrapper for slides -->
+		<div class="carousel-inner">
+			<div class="item active">
+				<img src="<%=basePath%>assets/img/banner_img1.png" alt="1">
+			</div>
+			<div class="item">
+				<img src="<%=basePath%>assets/img/banner_img2.png" alt="2">
+			</div>
+			<div class="item">
+				<img src="<%=basePath%>assets/img/banner_img3.png" alt="3">
+			</div>
+		</div>
+	</div>
+
+	<!-- 主页内容 -->
+	<div id="content" class="col-md-12">
+
+		<!-- 搜索框 -->
+		<div id="search" class="col-md-3">
+			<form class="form-inline">
+				<div id="radio_div" class="col-md-12">
+					<div id="j_div" class="col-md-12">
+						<div class="radio-inline">
+							<label> <input id="single" name="j_type" type="radio"
+					checked="checked" class="radio" > <label for="single" class="input_label">单程</label>
+							</label>
+						</div>
+						<div class="radio-inline">
+							<label> <input id="double" name="j_type" type="radio"
+					 class="radio"> 
+							<label for="double" class="input_label">往返</label>
+							</label>
+						</div>
+					</div>
+
+				</div>
+               	
+				<div class="form-group">
+					<label for="">出发地</label>  <input
+					type="text" id="fromStation" name="fromStation" class="form-control" value="株洲"/>
+					<input type="hidden" id="fprovince" value="">
+					<input type="hidden" id="fcity" value="">
+					<script>
+					    var cityPicker = new IIInsomniaCityPicker({
+					        data: cityData,
+					        target: '#fromStation',
+					        valType: 'k-v',
+					        hideCityInput: '#fcity',
+					        hideProvinceInput: '#fprovince',
+					        callback: function(city_id){
+					        }
+					    });
+					
+					    cityPicker.init();				  
+					</script>
+				</div>
+				<div class="form-group">
+					<label for="toStation">目的地</label> <input type="text"
+						class="form-control" id="toStation"  value="大理">
+					<input type="hidden" id="fprovince" value="">
+					<input type="hidden" id="fcity" value="">
+						<input type="hidden" id="tprovince" value="">
+						<input type="hidden" id="tcity" value="">
+				
+					<script>
+					    var cityPicker2 = new IIInsomniaCityPicker({
+					        data: cityData,
+					        target: '#toStation',
+					        valType: 'k-v',
+					        hideCityInput: '#tcity',
+					        hideProvinceInput: '#tprovince',
+					        callback: function(city_id){
+					        }
+					    });
+					
+					    cityPicker2.init();
+					  
+					</script>
+				</div>
+				<div class="form-group">
+					<label for="departDate" id="departDateLable">出发日</label> <input
+						type="date" class="form-control" id="departDate">
+				</div>
+				<div class="form-group">
+					<label for="returnDate" id="returnDateLable">返程日</label> <input
+						type="date" class="form-control" id="returnDate">
+				</div>
+				<div class="col-md-12" id="btn_div">
+					<input type="button" id="search_btn" value="查询" />
+				</div>
+			</form>
+		</div>
+
+		<!-- 车次信息 -->
+		<div class="col-md-6 table-responsive" >
+			<table class="table table-hover " id="info_table">
+				<thead id="info_head">
+					<tr>
+						<td style="width:130px"> &nbsp &nbsp &nbsp &nbsp &nbsp车次</td>
+						<td style="width:110px">出发地</td>
+						<td style="width:140px">目的地</td>
+						<td style="width:200px">出发时间</td>
+						<td>到达时间</td>
+					</tr>
+				</thead>
+			</table>
+		</div>
+		<div class="col-md-6 table-responsive" id="contain">
+			<table class="table table-hover " id="table_scroll">
+				<tbody id="trainList">
+					
+				</tbody>
+			</table>
+		</div>
+
+
+		<!-- 信息栏  -->
+		<div id="info" class="col-md-3">
+
+			<!-- 公告栏 -->
+			<div class="panel panel-default">
+
+				<div class="panel-heading">公告</div>
+
+				<!-- List group -->
+				<ul class="list-group">
+					<li class="list-group-item">关于调整互联网、电话订票起售时间的公告</li>
+					<li class="list-group-item">哈尔滨铁路局关于部分旅客列车临时停运的公告</li>
+					<li class="list-group-item">关于牡丹江站部分旅客列车临时调整的公告</li>
+					<li class="list-group-item">关于增开广州南-昆明南D3862/3次旅客列车的公告</li>
+					<li class="list-group-item">沈阳铁路局关于部分列车停运的公告</li>
+				</ul>
+			</div>
+			<!-- 乘车须知 -->
+			<div class="panel panel-default">
+				<div class="panel-heading">乘车须知</div>
+				<!-- List group -->
+				<ul class="list-group">
+					<li class="list-group-item">乘坐汽车前饮酒要适度，保持清醒</li>
+					<li class="list-group-item">不要随便接受和进食陌生人给出的饮料和食品</li>
+					<li class="list-group-item">不能委托陌生人帮补车票或看管行李</li>
+					<li class="list-group-item">服务电话：12306</li>
+					<li class="list-group-item">遇到突发事件，旅客可以使用110报警</li>
+				</ul>
+			</div>
+		</div>
+
+	</div>
+	
+	<!--单程搜索结果-->
+	<div id="goResult" class="result"></div>
+
+
+	<!--返程搜索结果-->
+	<div id="returnResult" class="result"></div>
+
+</body>
+</html>

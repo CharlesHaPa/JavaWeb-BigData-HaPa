@@ -1,0 +1,42 @@
+package com.sw1408.test.mapper;
+
+import com.sw1408.po.Schedule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.sw1408.mapper.ScheduleMapper;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("/applicationContext.xml")
+public class ScheduleMapperTest {
+	 @Autowired
+	 ScheduleMapper scheduleMapper;
+	 
+	 @Test
+	 public void shouldPrintSelectedScheduleByTrainId(){
+		 System.out.println(scheduleMapper.selectScheduleByTrainId(125));
+	 }
+	 
+	 @Test
+	 public void shouldPrintSelectedScheduleByTrainIdAndStationId(){
+		 System.out.println(scheduleMapper.selectScheduleByTrainIdAndStationId(1, 1));
+	 }
+
+	 @Test
+	 public void shouldPrintSelectedShceduleByDepartDate() {
+	 	System.out.println(scheduleMapper.selectScheduleByDepartDate(java.sql.Date.valueOf("2017-7-1")));
+	 }
+
+	 @Test
+	 public void shouldPrintSelectedScheduleByDepartDateRange() {
+		 System.out.println(scheduleMapper.selectScheduleByDepartDateRange(java.sql.Date.valueOf("2017-7-1"), java.sql.Date.valueOf("2017-7-5")));
+	 }
+	 
+	 @Test
+	 public void shouldAddSchedule(){
+		 
+	 }
+}

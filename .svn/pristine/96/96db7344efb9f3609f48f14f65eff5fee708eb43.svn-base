@@ -1,0 +1,7 @@
+//$(function() {
+//	$("#nav_login/register").mouseover(function(){
+//		$(".nav_second").css("display", "block");
+//	}).mouseout(function() {
+//		$(".nav_second").css("display", "none");
+//	})
+//})

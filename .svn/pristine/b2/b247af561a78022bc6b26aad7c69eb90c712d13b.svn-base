@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sw1408.mapper.ItemMapper">
+	
+	<select id = "selectItemByItemId" parameterType="int" resultType="com.sw1408.po.Item">
+	    select * from item where id = #{id}
+	</select>
+	
+	<update id ="updateItemByItemId">
+	     update item 
+	     set STATUS = #{1}
+	     where id = #{0}
+	</update>
+	
+	<select id="selectItemByClientId" resultType="com.sw1408.po.Item">
+        SELECT * FROM ITEM WHERE CLIENTID = #{clientId}
+    </select>
+
+    <select id="selectItemByTicketId" resultType="com.sw1408.po.Item">
+        SELECT * FROM ITEM WHERE TICKETID = #{ticketId}
+    </select>
+	
+	<select id="selectItemById" resultType="com.sw1408.po.Item">
+        SELECT * FROM ITEM WHERE ID = #{id}
+    </select>
+    
+        <select id="selectItemsByClientIDAndCreateDateAndStatus" resultType="com.sw1408.po.Item">
+        SELECT * FROM ITEM WHERE CLIENTID = #{0} AND to_date(to_char(departtime, 'yyyy-mm-dd'), 'yyyy-mm-dd') = #{1} AND STATUS = #{2}
+    </select>
+
+    <select id="selectItemsByStatusAndCreateDateRange" resultType="com.sw1408.po.Item">
+        SELECT * FROM ITEM WHERE STATUS = #{0} AND CREATEDATE BETWEEN #{1} AND #{2}
+    </select>
+
+
+    <select id="selectItemByClientIdAndStatusAndCreateDateRange" resultType="com.sw1408.po.Item">
+        SELECT * FROM ITEM WHERE CLIENTID = #{0} AND STATUS = #{1} AND CREATEDATE BETWEEN #{2} AND #{3}
+    </select>
+
+</mapper>

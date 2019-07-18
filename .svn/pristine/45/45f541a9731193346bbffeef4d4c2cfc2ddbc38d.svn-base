@@ -1,0 +1,52 @@
+package com.sw1408.util;
+
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class SeatUtil {
+
+	public static String getNeedPath(String path, int begin,int end){
+	   String pattern = ".*("+begin+".*"+end+").*";
+	   Pattern r = Pattern.compile(pattern); 
+//	   boolean isMatch = Pattern.matches(pattern, s);
+	   Matcher m = r.matcher(path);
+	   if (m.find()) {
+	         System.out.println("Found value: " + m.group(1) );
+	         return m.group(1);
+	   }
+		return null;
+	}
+	
+	public static boolean isUsable(String path, int begin,int end){	 
+	   String pattern = ".*"+begin+"(.*)"+end+".*";
+	   Pattern r = Pattern.compile(pattern); 
+	   Matcher m = r.matcher(path);
+	   if (m.find()) {
+	         String a=m.group(1);
+	         if (a.indexOf("+")!=-1){
+	        	 return false;
+	         }else{
+	        	 return true;
+	         }
+	    }	   
+	  return false;
+	}
+	public static String changeUsable(String path,int begin,int end){	
+		String pattern = ".*"+begin+"(.*)"+end+".*";
+		System.out.println("s");
+		Pattern r = Pattern.compile(pattern);
+		 Matcher m = r.matcher(path);
+		   if (m.find()) {
+		         String a=m.group(1);
+		         if (a.indexOf("+")==-1){
+		        	 String b = a.replace("-", "+");
+		        	return path.replace(a, b);
+		         }else{
+		        	 throw new NumberFormatException();  
+		         }
+		   }else{
+			   throw new NumberFormatException();  
+		   }
+	}
+}

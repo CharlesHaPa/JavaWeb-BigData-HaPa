@@ -1,0 +1,5 @@
+package com.sw1408.service;
+
+public interface AdminService {
+	public String getSeatInfo(String departure,String arrival,String date);
+}

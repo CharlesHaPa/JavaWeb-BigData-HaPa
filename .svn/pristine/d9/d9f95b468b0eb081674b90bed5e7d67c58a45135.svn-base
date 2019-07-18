@@ -1,0 +1,77 @@
+package com.sw1408.controller;
+
+import com.sw1408.service.ItemService;
+import com.sw1408.vo.Filter;
+import com.sw1408.vo.ItemDetail;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.sql.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+@Controller
+public class ItemController {
+    @Autowired
+    private ItemService itemService;
+
+    /**
+     *
+     * @param id
+     * @return
+     * @author dkq
+     */
+    @RequestMapping(value = "/item/queryDetailById", produces = {"application/json; charset=UTF-8"})
+    public ModelAndView queryItemDetail(@RequestParam int id) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("itemDetail", itemService.getItemDetail(id));
+        modelAndView.setViewName("item/queryDetail");
+        return modelAndView;
+    }
+
+    @RequestMapping("item/personalItem")
+    public ModelAndView queryPersonalItem(HttpSession session) {
+    	int clientId = (int) session.getAttribute("clientId");
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("itemDetailList", itemService.queryItemDetailByClientId(clientId));
+        modelAndView.setViewName("item/queryDetail");
+        return modelAndView;
+    }
+
+    @RequestMapping("/item/queryDetails")
+    public ModelAndView queryItemsDetails(HttpServletRequest request, @RequestParam String itemType, @RequestParam String fromDate, @RequestParam String toDate) {
+    	ModelAndView mav = new ModelAndView();
+        int clientId = (int) request.getSession().getAttribute("clientId");
+        mav.setViewName("item/queryDetail");
+        mav.addObject("itemType", itemType);
+        mav.addObject("fromDate", fromDate);
+        mav.addObject("toDate", toDate);
+        List<ItemDetail> detailList = itemService.queryItemDetailByClientId(clientId);
+        Filter<ItemDetail> f = new Filter<ItemDetail>(detailList);
+        
+        if (itemType.equals("notTravel")) {
+        	f.filter("startDepartTime", new Date(new java.util.Date().getTime()).toString());
+        } else if (itemType.equals("Traveled")) {
+        	f.filter("endDepartTime", new Date(new java.util.Date().getTime()).toString());
+        } else if (itemType.equals("returned")) {
+        	f.filter("orderStatus", "退票");
+        	if (!fromDate.equals("")) {
+        		f.filter("startDepartTime", fromDate);
+        	}
+        	if (!toDate.equals("")) {
+        		f.filter("endDepartTime", toDate);
+        	}
+        }
+        for (ItemDetail detail: f.result()) {
+   		 System.out.println(detail);
+   	 	}
+        mav.addObject("itemDetailList", f.result());
+        return mav;
+    }
+
+}

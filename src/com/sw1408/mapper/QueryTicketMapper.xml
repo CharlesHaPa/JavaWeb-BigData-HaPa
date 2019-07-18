@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sw1408.mapper.QueryTicketMapper">
+	
+	
+	<select id="queryTrains" resultType="java.lang.Integer">
+	<bind name="path" value="'%'+ param2+'%'+ param3 +'%'"/>
+		select trainId from schedule s 
+		where to_char(s.departTime,'YYYY-MM-DD')=#{0}
+ 		and s.stationId=#{1}
+ 		intersect 
+ 		select id from train t where t.allPath like #{path}
+	</select>
+	
+	<select id="getStartDate"  resultType="java.lang.String"> 
+		select to_char(departTime,'hh24:mi') from schedule s where trainId=#{0} and stationId=#{1}
+	</select>
+	
+	<select id="getEndDate"  resultType="java.lang.String"> 
+		select to_char(arriveTime,'hh24:mi') from schedule s where trainId=#{0} and stationId=#{1}
+	</select>
+	
+	<select id="getIntervalMin"  resultType="java.lang.Integer"> 
+		select floor(to_number(
+		(select arriveTime from schedule s where trainId=#{0} and stationId=#{1})
+		-(select departTime from schedule s where trainId=#{0} and stationId=#{2})
+		)*24*60) as spanHours from dual
+	</select>
+	 
+	<select id="querySeats" resultType="com.sw1408.util.AvailableSeat">
+	<bind name="condition1" value="'%'+ param1+'%'+ param2 +'%'"/>
+	<bind name="condition2" value="'%'+ param1+'%+%'+ param2 +'%'"/>
+	 	 select type,count(*) as SeatCount from seat 
+	 	 where usable like #{condition1} and usable not like #{condition2}
+	 	 and trainId=#{2}
+		 group by type
+	</select>
+	
+	<select id="getTrainName" resultType="java.lang.String">
+	 	 select trainName from train where id=#{id}
+	</select>
+	
+	<select id="getStationId" resultType="java.lang.Integer">
+	 	 select id from station where name=#{stationName}
+	</select>
+	
+	<select id="getTypes" resultType="java.lang.String">
+	 	select distinct type from seat where trainId=#{trainId}
+	</select>
+	
+	<select id="getDistance" resultType="java.lang.Float">
+	 	select distance from distance where stationA=#{0} and stationB=#{1} 
+		union
+		select distance from distance where stationA=#{1}  and stationB=#{0} 
+	</select>
+	
+	<select id="getX" resultType="java.lang.Float">
+	 	select methodType from calculateMethod where trainType=#{0} and seatType=#{1}
+	</select>
+	
+	<select id="getTrainType" resultType="java.lang.String">
+	 	select type from train where id=#{trainId}
+	</select>
+	
+</mapper> 

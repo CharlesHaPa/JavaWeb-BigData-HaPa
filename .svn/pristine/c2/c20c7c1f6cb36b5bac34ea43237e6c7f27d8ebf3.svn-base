@@ -1,0 +1,15 @@
+package com.sw1408.service;
+import java.util.List;
+import com.sw1408.vo.AvailableTrain;
+import com.sw1408.vo.TicketVo;
+
+
+
+public interface TicketService {
+
+	public  List<AvailableTrain> queryTicket(String fromStation,String toStation,String departDate);
+
+	public String payTicket(TicketVo ticketVo);
+	
+	public boolean returnTicket(int itemId);
+}

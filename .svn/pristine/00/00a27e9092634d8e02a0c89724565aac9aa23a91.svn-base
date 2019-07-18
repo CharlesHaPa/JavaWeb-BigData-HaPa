@@ -1,0 +1,75 @@
+
+#reg_box{
+	top:50px;
+	height: 600PX auto;
+	width: 520px;
+	margin-bottom: 200px;
+	position: absolute;
+	left: 35%;
+	display:inblock;
+	opacity:1.0;
+	background:whitesmoke;
+	border:2px solid lightskyblue;
+	border-radius: 25px ;
+}
+.reg_titile{
+	/*margin: px;*/
+	position: relative;
+	left: 46%;
+	font-size: 20pt;
+}
+.reg_info 
+{
+	 list-style:none; 
+	 line-height:50px;
+	 padding-bottom: 15px;
+}
+.reg_label
+{
+	display:inline-block;
+	height: 20px;
+	position: relative;
+	left: 20px;
+
+	text-align:center;
+/*	line-height:25px;*/
+}
+.reg_label-content
+{
+	display:inline-block;
+	height: 20px;
+	float: right;
+	position: relative;
+	top: 15px;
+	right: 40px;
+	text-align:center;
+	
+/*	line-height:25px;*/
+}
+.reg_tips 
+{
+	color: #FF7F00;
+	position: relative;
+	margin:0 auto;
+	top: 15px;
+	text-align:center;
+}
+.reg_submit
+{
+	position: relative;
+/*	top: 10px;*/
+	/*bottom: 10%;
+	left: %;*/
+	text-align:center;
+}
+#reg_submit
+{
+	width:150px;
+	height:30px;
+	border-radius:13px;
+	border:1px solid #adadad;
+}
+
+#reg_submit:hover {
+	cursor:pointer;
+}

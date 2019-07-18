@@ -1,0 +1,105 @@
+@charset "utf-8";
+.mask {
+	margin: 0;
+	padding: 0;
+	border: none;
+	width: 100%;
+	height: 100%;
+	background: gray;
+	opacity: 0.8;
+	filter: alpha(opacity=80);
+	z-index: 9999;
+	position: fixed;
+	top: 0;
+	left: 0;
+	display: none;
+}
+
+#LoginBox {
+	position: absolute;
+	left: 660px;
+	top: 50px;
+	background: white;
+	width: 456px;
+	height: 282px;
+	border: 2px solid lightskyblue;
+	border-radius: 20px ;
+	z-index: 10000;
+	display: none;
+}
+
+.row1 {
+	background: white;
+	padding: 0px 30px;
+	line-height: 50px;
+	height: 50px;
+	border-radius: 25px ;
+	font-weight: bold;
+	color: #666;
+	font-size: 16px;
+}
+
+.row {
+	height: 77px;
+	line-height: 77px;
+	padding: 0px 30px;
+	font-size: 16px;
+}
+
+.close_btn {
+	font-size: 20px;
+	font-weight: 700;
+	color: #999;
+	text-decoration: none;
+	float: right;
+	padding-right: 4px;
+}
+
+.inputBox {
+	/*border: 1px solid #c3c3c3;*/
+	padding: 1px 3px 6px 3px;
+/*	border-radius: 5px;*/
+	margin-left: 5px;
+}
+
+#userName {
+	height: 27px;
+	width: 230px;
+	/*border: none;*/
+}
+
+#psw {
+	height: 27px;
+	width: 230px;
+/*	border: none;*/
+}
+
+#loginbtn {
+	width: 150px;
+	height: 40px;
+	text-align:center;
+	vertical-align:middle;
+	line-height: 25px;
+	color: White;
+	background: #4490f7;
+/*	text-decoration: none;*/
+	margin-left: /*87*/50px;
+	margin-top: 5px;
+	opacity: 0.8;
+	filter: alpha(opacity=80);
+}
+#SearchPwd{
+	float: left;
+	color: black;
+	text-decoration: none;
+	font-size: 12px;
+}
+.warning {
+	float: right;
+	color: Red;
+	text-decoration: none;
+	font-size: 12px;
+	/*font-weight: bold;*/
+	/*margin-right:8px;*/
+	display: none;
+}

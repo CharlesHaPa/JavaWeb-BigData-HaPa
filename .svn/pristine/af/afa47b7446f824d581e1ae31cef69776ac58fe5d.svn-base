@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+
+    <title>HaPa管理员系统</title>
+
+    <!-- Bootstrap -->
+</head>
+<body>
+<div style="float:left" >
+	<input type="checkbox" class="table">table1<br/>
+	<input type="checkbox" class="table">table1<br/>
+	<input type="checkbox" class="table">table1<br/>
+	<input type="checkbox" class="table">table1<br/>
+	<input type="checkbox" class="table">table1<br/>
+	<input type="checkbox" class="table">table1<br/>
+	<input type="checkbox" class="table">table1<br/>
+	<input type="button" value="添加">
+</div>	
+<div style="float:left;margin-left:50px">
+	<input type="checkbox" class="table">table2<br/>
+	<input type="checkbox" class="table">table2<br/>
+	<input type="checkbox" class="table">table2<br/>
+	<input type="checkbox" class="table">table2<br/>
+	<input type="checkbox" class="table">table2<br/>
+	<input type="checkbox" class="table">table2<br/>
+	<input type="checkbox" class="table">table2<br/>
+	<input type="button" value="删除">
+</div>
+</body>
+</html>

@@ -1,0 +1,120 @@
+package com.sw1408.service.impl;
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.Resource;
+import org.springframework.stereotype.Service;
+import com.sw1408.mapper.QueryTicketMapper;
+import java.sql.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.sw1408.mapper.PassengerMapper;
+import com.sw1408.mapper.SelectSeatMapper;
+import com.sw1408.mapper.TicketMapper;
+import com.sw1408.po.Passenger;
+import com.sw1408.po.Seat;
+import com.sw1408.po.Ticket;
+import com.sw1408.service.TicketService;
+
+import com.sw1408.util.AvailableSeat;
+import com.sw1408.vo.AvailableTrain;
+
+import com.sw1408.util.SeatUtil;
+import com.sw1408.vo.InsuranceVo;
+import com.sw1408.vo.TicketVo;
+
+import oracle.net.aso.i;
+
+@Service
+public class TicketServiceImpl implements TicketService {
+
+	@Resource QueryTicketMapper queryTicketMapper;
+	@Resource
+	SelectSeatMapper selectSeatMapper;
+	@Resource
+	TicketMapper ticketMapper;
+	@Resource
+	PassengerMapper passengerMapper;
+	
+	public List<AvailableTrain> queryTicket(String fromStation,String toStation,String departDate){
+		
+		Integer fromStation_id=queryTicketMapper.getStationId(fromStation);
+		Integer toStation_id=queryTicketMapper.getStationId(toStation);
+		//可选火车Id
+		List<Integer> trainIds=queryTicketMapper.queryTrains(departDate, fromStation_id, toStation_id);
+		//返回Json数组
+		ArrayList<AvailableTrain> availableTrains=new ArrayList<AvailableTrain>();
+		ArrayList<String> types=new ArrayList<String>();
+		//候选座数组
+		for(Integer trainId:trainIds) {
+			System.out.println(trainId);
+			List<AvailableSeat> seats=new ArrayList<AvailableSeat>();
+			//查询一辆车的所有座位类型
+			types=queryTicketMapper.getTypes(trainId);
+			//初始化待选车数据
+			for (String type : types) {
+				AvailableSeat initialSeat=new AvailableSeat(type,0);
+				seats.add(initialSeat);
+			}
+			String trainName=queryTicketMapper.getTrainName(trainId);
+			List<AvailableSeat> availableSeats=queryTicketMapper.querySeats(fromStation_id,toStation_id,trainId);
+			//赋值余票数
+			for (AvailableSeat seat : seats) {
+				for (AvailableSeat availableSeat : availableSeats) {
+					if(seat.getType().equals(availableSeat.getType())){
+						seat.setSeatCount(availableSeat.getSeatCount());
+					}
+				}
+			}
+			for (AvailableSeat seat : seats) {
+				System.out.print(trainName);
+				System.out.println(seat.getType()+seat.getSeatCount());
+			}
+			//添加一条结果
+			AvailableTrain availableTrain=new AvailableTrain(trainId,trainName,fromStation,toStation,seats);
+			availableTrains.add(availableTrain);
+		}
+		return availableTrains;
+	}
+	
+	public boolean payTicket(TicketVo ticketVo){
+		Passenger passenger=ticketVo.getPassenger();
+		int passengerId = passengerMapper.selectIdByCardId(passenger.getCardId());
+		if(passengerId==0){
+			passengerMapper.insertOne(passenger);
+			passengerId = passengerMapper.selectIdByCardId(passenger.getCardId());
+		}
+		String ticketType=passenger.getIsStudent()==1?"学生票":"成人票";
+		String path = selectSeatMapper.queryPath(ticketVo.getTrainId());
+		int departureId= selectSeatMapper.findStationId(ticketVo.getDeparture());
+		int arriveId= selectSeatMapper.findStationId(ticketVo.getArrival());
+		String needPath =SeatUtil.getNeedPath(path, departureId, arriveId);
+		Seat seat = selectSeatMapper.selectSeat(needPath,ticketVo.getTrainId());
+		String usable =SeatUtil.changeUsable(path, departureId,arriveId);
+		Ticket ticket=new Ticket(seat.getId(),passengerId,ticketType,"已购买",ticketVo.getPrice(),
+				departureId,arriveId);
+		ticketMapper.createTicket(ticket);
+		ticketMapper.updateSeat(seat.getId(),usable);
+		double totalFee = ticketVo.getPrice();
+		for(int i=0;i<ticketVo.getInsurancePrice().length;i++){
+			totalFee+=ticketVo.getInsurancePrice()[i];
+		}
+		ticketMapper.createItem(ticketVo.getClientId(),seat.getId(), 
+				departureId, arriveId, "已购买",
+				new Date(System.currentTimeMillis()), 
+				new Date(System.currentTimeMillis()), 
+				totalFee);
+		for(int i=0;i<ticketVo.getInsuranceId().length;i++){
+			ticketMapper.addInsurance(ticketVo.getClientId(), seat.getId(),
+					passengerId,ticketVo.getInsuranceId()[i]);
+		}
+		System.out.println(ticket);
+		return false;
+	}
+}

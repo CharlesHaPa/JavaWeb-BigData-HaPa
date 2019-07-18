@@ -1,0 +1,26 @@
+package com.sw1408.test.mapper;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.sw1408.mapper.StationMapper;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("/applicationContext.xml")
+public class StationMapperTest {
+	@Autowired
+    StationMapper stationMapper;
+	
+	@Test
+	public void shouldPrintSelectedStationById(){
+		System.out.println(stationMapper.selectStationById(1));
+	}
+	
+	@Test
+	public void shouldPrintSelectedStationByName(){
+		System.out.println(stationMapper.selectStationByName("宝鸡"));
+	}
+}

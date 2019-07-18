@@ -1,0 +1,14 @@
+log4j.rootLogger=ERROR, stdout
+log4j.logger.com.sw1408.mapper.StudentMapper=DEBUG
+#log4j.logger.com.sw1408.mapper.TrainMapper=DEBUG
+#log4j.logger.com.sw1408.mapper.ScheduleMapper=DEBUG
+log4j.logger.com.sw1408.mapper.ClientMapper=DEBUG
+log4j.logger.com.sw1408.mapper.PassengerMapper=DEBUG
+log4j.logger.com.sw1408.mapper.SeatMapper=DEBUG
+#log4j.logger.com.sw1408.mapper.StationMapper=DEBUG
+log4j.logger.com.sw1408.mapper.TicketMapper=DEBUG
+log4j.logger.com.sw1408.mapper.ItemMapper=DEBUG
+#log4j.logger.com.sw1408.mapper.QueryTicketMapper=DEBUG
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n

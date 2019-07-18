@@ -1,0 +1,126 @@
+package com.sw1408.service.impl;
+
+import com.sw1408.mapper.ScheduleMapper;
+import com.sw1408.mapper.SeatMapper;
+import com.sw1408.mapper.StationMapper;
+import com.sw1408.mapper.TrainMapper;
+import com.sw1408.po.Schedule;
+import com.sw1408.po.Seat;
+import com.sw1408.po.Station;
+import com.sw1408.po.Train;
+import com.sw1408.service.TrainService;
+import net.sf.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ * Created by DLETC on 2017/7/3.
+ */
+
+@Service
+public class TrainServiceImpl implements TrainService {
+    @Autowired
+    TrainMapper trainMapper;
+    @Autowired
+    StationMapper stationMapper;
+    @Autowired
+    SeatMapper seatMapper;
+    @Autowired
+    ScheduleMapper scheduleMapper;
+
+    @Override
+    public List<Station> allStations(int trainId) {
+        List<Station> stations = new ArrayList<>();
+        Train train = trainMapper.selectTrainById(trainId);
+        Matcher matcher = Pattern.compile("(?!-)\\d+(?=-)").matcher(train.getAllPath());
+        while (matcher.find()) {
+            Station station = stationMapper.selectStationById(Integer.parseInt(matcher.group()));
+            stations.add(station);
+        }
+        return stations;
+    }
+
+    @Override
+    public JSONObject queryTrainDetailByTrainNameAndStaionIdAndDepartDate(String trainName, int stationId, Date departDate) {
+        Train train = trainMapper.selectTrainByTrainNameAndStationIdAndDepartDate(trainName, stationId, departDate);
+        return queryTrainDetail(train.getId());
+    }
+
+    @Override
+    public JSONObject queryTrainDetail(int trainId) {
+        Train train = trainMapper.selectTrainById(trainId);
+        List<Schedule> schedules = scheduleMapper.selectScheduleByTrainId(train.getId());
+        List<Station> stations = allStations(train.getId());
+        List<String> allPath = new ArrayList<>();
+        List<String> arriveTime = new ArrayList<>();
+        List<String> departTime = new ArrayList<>();
+        for (Schedule schedule : schedules) {
+            arriveTime.add(schedule.getArriveTime().toString());
+            
+            //departTime.add(schedule.getDepartTime().getHours() + ":" + schedule.getDepartTime().getMinutes());
+            departTime.add(schedule.getDepartTime().toLocaleString());
+            
+        }
+        for (Station station : stations) {
+            allPath.add(station.getName());
+        }
+        JSONObject map = new JSONObject();
+        map.put("trainId", train.getId());
+        map.put("trainName", train.getTrainName());
+        map.put("allPath", allPath);
+        map.put("startStation", allPath.get(0));
+        map.put("endStation", allPath.get(allPath.size() - 1));
+        map.put("startTime", departTime.get(0));
+        map.put("endTime", departTime.get(departTime.size() - 1));
+        map.put("arriveTime", arriveTime);
+        map.put("departTime", departTime);
+        return map;
+    }
+
+    @Override
+    public List<JSONObject> queryTrainDetailOfToday() {
+        List<String> trainNames = trainMapper.selectTrainNames();
+        List<JSONObject> trainDetails = new ArrayList<>();
+        for (String trainName: trainNames) {
+            List<Station> stations = allStations(trainMapper.selectFirstTrainByTrainName(trainName).getId());
+            Train train = trainMapper.selectTrainByTrainNameAndStationIdAndDepartDate(trainName, stations.get(0).getId(), new Date(new java.util.Date().getTime()));
+            trainDetails.add(queryTrainDetail(train.getId()));
+        }
+        return trainDetails;
+    }
+
+    @Override
+    public void addTrain(Train train,int carriageQuantity,Schedule schedule){
+        trainMapper.addTrain(train);
+        Seat seat=new Seat();
+        int trainId = train.getId();
+        seat.setTrainId(trainId);
+        String mid_i;
+        String mid_j;
+        String mid_z;
+
+        String path = train.getAllPath();
+        seat.setUsable(path);
+        seat.setType("二等座");
+        for(int i = 0;i<carriageQuantity;i++){
+            mid_i = String.valueOf(i+1);
+            seat.setCarriage(mid_i);
+            for(int j = 0;j<24;j++){
+                mid_j = String.valueOf(j+1);
+                seat.setRow_num(mid_j);
+                for(int z = 0;z < 5;z++){
+                    mid_z = String.valueOf(z+1);
+                    seat.setCol_num(mid_z);
+                    seatMapper.addSeat(seat);
+                }
+            }
+        }
+    }
+
+}

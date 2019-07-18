@@ -1,0 +1,270 @@
+
+.frequentContacts {
+	text-align: center;
+	border: 1px solid black;
+}
+@charset "utf-8";
+* {
+	margin: 0;
+	padding: 0;
+}
+#main_block {
+	background: #fff;
+	font-size: 12px;
+	font-family: Tahoma, "宋体";
+	color: #333;
+	margin: 0;
+	padding: 0;
+	position: relative;
+}
+a{text-decoration: none;}
+ul li {
+	list-style-type: none;
+}
+.content {
+	width: 1600px;
+	min-height: 620px;
+	margin: 0 auto
+}
+.clearfix:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden
+}
+
+.clearfix {
+	display: inline-block
+}
+
+.clearfix {
+	display: block;
+}
+.layout {
+	border: 1px solid #1678be;
+	border-radius: 5px 5px 0 0;
+	-moz-border-radius: 5px 5px 0 0;
+	-ms-border-radius: 5px 5px 0 0;
+	-o-border-radius: 5px 5px 0 0;
+	-webkit-border-radius: 5px 5px 0 0;
+	background-position: 0 -400px
+}
+
+.layout .lay-bd {
+	background: #eef1f8;
+	border-top: 0
+}
+.my .lay-bd {
+	position: relative;
+	z-index: 0;
+	background: #eef1f8;
+	padding: 20px 14px
+}
+
+.my dl dt,
+.my dl dd {
+	height: 39px;
+	line-height: 39px;
+	border-bottom: 1px solid #ddd
+}
+
+.my dl a:hover {
+	color: #66c8e8
+}
+
+.my dl .prev {
+	border-bottom: 1px solid #fff
+}
+
+.my dl .cur {
+	border-bottom: 1px solid #fff
+}
+
+.my dl .last {
+	border-bottom: 0
+}
+
+.my dl .cur-txt,
+.my dl .cur a {
+	color: #66c8e8
+}
+
+.my dl dt a {
+	font-size: 14px;
+	color: #333
+}
+
+.my dl dd a {
+	color: #666;
+	padding-left: 28px
+}
+.lay-hd {
+	background-color: #2082C5;
+	height: 32px;
+	line-height: 30px;
+	color: white;
+	padding-left: 20px;
+	font-size: 14px;
+	position: relative
+}
+
+.nav-label {
+	width: 198px;
+	height: 41px;
+	z-index: -1;
+	background: #fff;
+	position: absolute;
+	left: 0;
+	_left: -14px;
+	top: 59px
+}
+.order .lay-bd {
+	background: #fff;
+	padding: 10px;
+	min-height: 499px;
+	_height: 499px
+}
+.order-item {
+	border: 1px solid #41bae2;
+	height: 693px;
+
+}
+.safe-list {
+	padding-top: 20px
+}
+
+.safe-list li {
+	height: 30px;
+	line-height: 30px;
+	margin-bottom: 5px
+}
+
+.safe-list .r-txt {
+	float: left;
+	margin-right: 12px;
+	width: 202px
+}
+
+.safe-list .tips {
+	color: #ff7f00
+}
+.safe .line {
+	height: 1px;
+	line-height: 1px;
+	border-top: 1px dashed #999;
+	margin: 50px 0
+}
+
+.safe .lay-btn {
+	padding: 0;
+	margin: 50px 0
+}
+.safe h2 {
+	height: 30px;
+	line-height: 30px;
+	border-left: 6px solid #66c8e8;
+	padding-left: 10px;
+	font-size: 14px
+}
+* {
+	margin: 0;
+	padding: 0;
+}
+.table-c {
+	width: 100%;
+	border: 1px solid #c0d7e4;
+	background: #fff;
+	color: #666
+}
+
+.table-c th {
+	line-height: 40px;
+	background: #eef1f8;
+	font-weight: 400;
+	color: #333
+}
+.table-c tr{
+	line-height: 50px;
+	padding: 6px 0;
+	text-align: center;
+}
+.table-c td {
+	line-height: 20px;
+	padding: 6px 0;
+	text-align: center;
+}
+
+.order-item-bd .t-foot span {
+	margin-left: 20px
+}
+
+.order-item-bd .t-foot strong {
+	font-size: 14px
+}
+
+.order-item-bd .t-btn {
+	width: 728px;
+	margin: 0 auto;
+	height: 30px;
+	line-height: 30px;
+	padding: 10px 0;
+	overflow: hidden
+}
+
+.order-item-bd .t-btn .btn {
+	float: right;
+	text-align: right
+}
+
+.order-item-bd .t-btn .btn a {
+	margin-left: 10px
+}
+
+
+.main {
+	width: 693px;
+	margin:60px auto;
+	
+}
+
+* button {
+	background-color: #FF8000;
+	width: 60px;
+	height: 25px;
+	border-radius: 7px;
+	color: white;
+	cursor: pointer;
+}
+
+#btn_addFrequentContacts {
+	height: 40px;
+	width: 150px;
+	border-radius: 8px;
+	color: white;
+	background-color: #FF8000;
+	margin-left: 40%;
+	margin-top:18%;
+	cursor: pointer;
+}
+
+.red{
+	color: red;
+}
+
+.addPassenger_message {
+	padding-left: 28%;
+
+}
+
+body input{
+	font-size:14px;
+}
+
+body label{
+	cursor:pointer;
+}
+
+body table th{
+	text-align:center;
+}

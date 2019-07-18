@@ -1,0 +1,258 @@
+package com.sw1408.controller;
+
+import javax.annotation.Resource;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.ui.Model;
+import com.sw1408.po.Client;
+import com.sw1408.service.ClientService;
+import com.sw1408.service.TrainService;
+import com.github.pagehelper.PageInfo;
+import com.sw1408.po.Passenger;
+import com.sw1408.util.JsonDateValueProcessor;
+import com.sw1408.util.PageParams;
+
+import net.sf.json.JSONObject;
+
+@Controller
+public class ClientController {
+	
+	@Resource ClientService clientService;
+	@Autowired TrainService trainService;
+	
+	@RequestMapping(value="/client/register",method= RequestMethod.POST)
+	public String clientRegister(@ModelAttribute Client client){
+		boolean result = clientService.clientRegister(client);
+		if(result){
+			/*System.out.println(client.getId());*/
+			return "client/register_success";
+		}
+		else{
+			return "client/error";
+		}
+	}
+	
+	@Resource
+	PageParams pageParams;
+	
+
+	@ResponseBody
+	@RequestMapping(value="/client/login",method=RequestMethod.POST,produces="text/json;charset=UTF-8")
+	public String login(HttpServletRequest request,Model model){
+		
+//		System.out.println(request.getParameter("userName"));
+//		System.out.println(request.getParameter("psw"));
+		/*System.out.println(request.getParameter("userName"));
+		System.out.println(request.getParameter("psw"));*/
+		Client result=clientService.login(request.getParameter("userName"), request.getParameter("psw"));
+
+//		System.out.println(result);
+		
+		/*System.out.println(result);*/
+		request.getSession().setAttribute("clientId", result.getId());
+		request.getSession().setAttribute("clientName", result.getUserName());
+		request.getSession().setAttribute("clientGender", result.getGender());
+//		model.addAttribute("clientId", result.getId());
+//		model.addAttribute("clientName", result.getUserName());
+
+		/*return "/main/index";*/
+
+		if(null != result){
+			return JSONObject.fromObject(result,JsonDateValueProcessor.getJsonConfig()).toString();
+		}
+		return "null";
+
+	}
+
+	
+	/**
+	 * 璋冪敤ClientService涓嬬殑selectAllPassangers()鏂规硶锛岄�杩囪鐢ㄦ埛鐨刬d鏌ヨ璇ョ敤鎴蜂笅鎵�湁涔樺淇℃伅
+	 * 
+	 * @author SXY
+	 * @return ModelAndView
+	 */
+	@RequestMapping("/client/frequentContactsTable")
+	public ModelAndView frequentContactsTable(HttpSession session, HttpServletRequest request) {
+		int pageNum;
+		ModelAndView modelAndView = new ModelAndView();
+		if ("null".equals(request.getParameter("pageNum")) || request.getParameter("pageNum") == null) {
+			pageNum = 1;
+		}else {
+			pageNum = Integer.parseInt(request.getParameter("pageNum"));
+		}
+		pageParams.setPageSize(2);
+		pageParams.setPageNum(pageNum);
+		List<Passenger> list = clientService.selectAllPassengers(pageParams, 1);
+		PageInfo<Passenger> pageInfo = new PageInfo<Passenger>(list);
+		modelAndView.addObject("list", list);
+		modelAndView.addObject("pageInfo",pageInfo);
+		modelAndView.setViewName("/client/frequentContactsTable");
+		return modelAndView;
+	}
+
+	@RequestMapping("/client/showFrequentContacts")
+	public ModelAndView showFrequentContacts() {
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("/client/showFrequentContacts");
+		return modelAndView;
+	}
+	
+	/**
+	 * 璋冪敤ClientService涓嬬殑addPassenger()鏂规硶锛屾坊鍔犱竴涓箻瀹�
+	 * 
+	 * @author SXY
+	 * @param name
+	 *            Passenger's name
+	 * @param cardId
+	 *            Passenger's cardId
+	 * @param gender
+	 *            Passenger's gender
+	 * @param isStudent
+	 *            Mark passenger's type
+	 * @return ModelAndView
+	 */
+	@RequestMapping(value = "/client/addPassenger", produces = {"application/json; charset=UTF-8"})
+	public ModelAndView addPassenger(@ModelAttribute Passenger passenger, HttpServletRequest request) {
+		
+		ModelAndView modelAndView = new ModelAndView();
+		/*System.out.println(passenger);*/
+		Client client = new Client();
+		client.setId((Integer)request.getSession().getAttribute("clientId"));
+		boolean result = clientService.addPassenger(passenger, client);
+		System.out.println(passenger);
+		if (result) {
+			modelAndView.addObject("passenger", passenger);
+			modelAndView.setViewName("/client/showFrequentContacts");
+			return modelAndView;
+		} else {
+			modelAndView.setViewName("/client/error_addPassenger");
+			return modelAndView;
+		}
+	}
+	
+	/**
+	 * 璋冪敤ClientService涓嬬殑updatePassengerInfo()鏂规硶锛屼慨鏀逛竴涓箻瀹俊鎭�
+	 * 
+	 * @author SXY
+	 * @param name
+	 *            Passenger's name
+	 * @param cardId
+	 *            Passenger's cardId
+	 * @param gender
+	 *            Passenger's gender
+	 * @param isStudent
+	 *            Mark passenger's type
+	 * @return ModelAndView
+	 */
+	@RequestMapping("/client/modifyFrequentContactInfo")
+	public ModelAndView updatePassenger(@ModelAttribute Passenger passenger) {
+		System.out.println(passenger);
+		ModelAndView modelAndView = new ModelAndView();
+		//passenger.setId(25);
+		boolean result = clientService.updatePassengerInfo(passenger);
+		if (result) {
+			modelAndView.addObject("passenger", passenger);
+			modelAndView.setViewName("/client/showFrequentContacts");
+			return modelAndView;
+		} else {
+			modelAndView.setViewName("/client/error_updatePassenger");
+			return modelAndView;
+		}
+	}
+	
+	/**
+	 * 鍒犻櫎涔樺
+	 * 
+	 * @author SXY
+	 * @param passenger
+	 * @return
+	 */
+	@RequestMapping("/client/deletePassenger")
+	public ModelAndView deletePassenger(HttpServletRequest request) {
+		
+		ModelAndView modelAndView = new ModelAndView();
+		String cardId = (String) request.getParameter("cardId");
+		System.out.println(cardId);
+		boolean result = clientService.deletePassenger(cardId);
+		System.out.println(result);
+		if (result) {
+			modelAndView.addObject("cardId", cardId);
+			modelAndView.setViewName("/client/showFrequentContacts");
+			return modelAndView;
+		} else {
+			modelAndView.setViewName("/client/error_deletePassenger");
+			return modelAndView;
+		}
+	}
+	
+	/**
+	 * test
+	 * 
+	 * @author SXY
+	 * @return
+	 */
+	@RequestMapping("/client/test1")
+	public ModelAndView testPage(HttpServletRequest request) {
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.addObject("name", request.getParameter("name"));
+		modelAndView.addObject("gender", request.getParameter("gender"));
+		modelAndView.addObject("cardId", request.getParameter("cardId"));
+		modelAndView.addObject("isStudent", request.getParameter("isStudent"));
+		modelAndView.setViewName("/client/modifyFrequentContactInfo");
+		return modelAndView;
+	}
+	
+	@RequestMapping("/client/test")
+	public ModelAndView testPage() {
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("/client/addFrequentContact");
+		return modelAndView;
+	}
+	
+	@RequestMapping("/main/test")
+	public ModelAndView test(){
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("/main/index");
+		modelAndView.addObject("trainDetailList", trainService.queryTrainDetailOfToday());
+		return modelAndView;
+	}
+	
+	@RequestMapping("/client/regist")
+	public ModelAndView regist(){
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("/client/regist");
+		return modelAndView;
+	}
+	
+	@RequestMapping("/client/query")
+	public ModelAndView queryClient(){
+		int id=1;
+		Client client=clientService.queryClient(id);
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.addObject("CurrentClient", client);
+		modelAndView.setViewName("/client/info");
+		return modelAndView;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/modify")
+	public String modifyClientInfo(Client client ){
+		client.setId(1);
+		System.out.println(client);
+		clientService.modifyClient(client);
+		return "true";
+		
+	}
+
+}

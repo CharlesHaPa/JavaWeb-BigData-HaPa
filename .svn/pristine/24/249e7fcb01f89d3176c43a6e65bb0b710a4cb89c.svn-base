@@ -1,0 +1,151 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8" import="java.util.List" import="java.util.Date"%>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
+%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+ <script src="<%=basePath %>admin/js/echarts.min.js"></script>
+  <script src="<%=basePath %>admin/js/jquery-3.1.1.js"></script>
+</head>
+<body>
+	<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+	<div id="main" style="width: 1200px; height: 800px;"></div>
+	<script type="text/javascript">
+	function GetDay(days)   
+    {   
+        var today=new Date($('#date').val().replace(/-/,"/")) ;      
+        var yesterday_milliseconds=today.getTime()-1000*60*60*24*days;     
+        var yesterday=new Date();      
+        yesterday.setTime(yesterday_milliseconds);                  
+        var strYear=yesterday.getFullYear(); 
+        var strDay=yesterday.getDate();   
+        var strMonth=yesterday.getMonth()+1; 
+   
+        if(strMonth<10)   
+        {   
+            strMonth="0"+strMonth;   
+        }   
+        var strYesterday=strMonth+"-"+strDay;   
+        return strYesterday;   
+    }
+		// 基于准备好的dom，初始化echarts实例
+		option = {
+			tooltip : {
+				trigger : 'axis',
+				axisPointer : { // 坐标轴指示器，坐标轴触发有效
+					type : 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+				}
+			},
+			legend : {
+				data : [ '高铁', '动车', '普快' ]
+			},
+			grid : {
+				left : '3%',
+				right : '4%',
+				bottom : '3%',
+				containLabel : true
+			},
+			xAxis : {
+				type : 'value'
+			},
+			yAxis : {
+				type : 'category',
+				data : []
+			},
+			series : [ {
+				name : '高铁',
+				type : 'bar',
+				stack : '总量',
+				label : {
+					normal : {
+						show : true,
+						position : 'insideRight'
+					}
+				},
+				data : []
+			}, {
+				name : '动车',
+				type : 'bar',
+				stack : '总量',
+				label : {
+					normal : {
+						show : true,
+						position : 'insideRight'
+					}
+				},
+				data : []
+			}, {
+				name : '普快',
+				type : 'bar',
+				stack : '总量',
+				label : {
+					normal : {
+						show : true,
+						position : 'insideRight'
+					}
+				},
+				data : []
+			}, ]
+		};
+		var myChart = echarts.init(document.getElementById('main'));
+		myChart.setOption(option);
+		function change(){			
+			 $.ajax({
+		         type : "post",
+		         async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+		         url : "<%=basePath %>getSeatInfo",    //请求发送到TestServlet处
+		         data : {"departure":$('#departure').val(),
+		        	 	"arrival":$('#arrival').val(),
+		        	 	"date":$('#date').val()
+		        	 },
+		         dataType : "json",        //返回数据形式为json
+		         success : function(result) {
+		             //请求成功时执行该函数内容，result即为服务器返回的json对象
+		             for(var i=0;i<3;i++){
+		            	 option.series[i].data=[];
+		             }
+		             $.each(result,function(index,content){
+						/* console.log(index);
+						console.log(content);
+						console.log(data[index]); */
+						 myChart.hideLoading();
+						for(var i in content){	
+							 option.series[index].data.push(content[i]);
+						}
+					}) 
+					var yaxis=[];
+		            option.yAxis.data=[];
+		            for(var i=0;i<7;i++){
+		            	option.yAxis.data.push(GetDay(i));
+		            }
+					
+					myChart.setOption(option);
+		        },
+		         error : function(errorMsg) {
+		             //请求失败时执行该函数
+		         alert("图表请求数据失败!");	        
+		         }
+		    })
+		}
+	</script>
+	<select id="departure" ></select>
+	<select id="arrival" ></select>
+	<script type="text/javascript" src="<%=basePath %>admin/js/city.js"></script>
+		<script>
+		for(var i=0;i<citys.length;i++){
+			$("#departure").append("<option value='"+citys[i]+"'>"+citys[i]+"</option>");
+		}
+		for(var i=0;i<citys.length;i++){
+			$("#arrival").append("<option value='"+citys[i]+"'>"+citys[i]+"</option>");
+		}
+		</script>
+	<input type="date" id="date">
+	<input type="button" value="改变" onclick="change()" />
+</body>
+</html>

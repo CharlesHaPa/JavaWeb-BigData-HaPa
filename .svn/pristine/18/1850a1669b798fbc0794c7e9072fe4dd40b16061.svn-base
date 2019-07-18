@@ -1,0 +1,10 @@
+/**
+ * @author IIInsomnia
+ */
+var cityData = {
+    hot: [{
+        'name': '株洲'
+    }, {
+        'name': '大理'
+    }]
+};

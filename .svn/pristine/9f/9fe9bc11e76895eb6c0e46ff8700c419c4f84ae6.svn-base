@@ -1,0 +1,326 @@
+<%@page import="com.sw1408.vo.SeatVo"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
+%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="<%=basePath%>assets/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="<%=basePath%>ticket/css/Button.css" />
+		<link rel="stylesheet" href="<%=basePath%>ticket/css/buy.css" />
+		<script type="text/javascript" src="<%=basePath%>assets/js/jquery-3.1.1.js"></script>
+		<script type="text/javascript" src="<%=basePath%>assets/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="ticket/js/buy.js" ></script>
+	</head>
+
+	<body style="width:60%;margin: 0 auto;">
+	<%if(session.getAttribute("clientId")!=null){
+		session.setAttribute("query","true");
+	%>
+	<a href="<%=basePath %>main/test">返回</a>
+		<div id="content">
+		  <h2 >订单详情</h2>
+		<input style="display:none" id="seatType" value="${seatVo.seatType}">
+		<input style="display:none" id="trainId" value="${seatVo.trainId}">
+		<div class="form_panel" id="first">
+			<h3>车次信息</h3>
+			<div class="form_field ticket">
+				<table width="100%" cellspacing="0" cellpadding="0" class="tb_train_info2">
+					<tbody>
+						<tr>
+							<td style="width: 50px;">单程</td>
+							<td style="width: 100px;">
+								<strong id="Strong1" class="checi">
+                    			${seatVo.trainName}</strong><br>
+				
+							</td>
+							<td style="width: 130px;" class="text_right" id="td1">
+								<span class="depart_station">${seatVo.departure}</span>
+								<span class="depart_time">${seatVo.departTime}</span>
+								<p class="depart_date">${seatVo.departDate}</p>
+
+							</td>
+							<td style="width: 200px;" class="text_center">
+								<b class="line_arrow"></b>
+								<div class="consuming"><i>${seatVo.during}</i></div>
+							</td>
+							<td style="width: 130px;" id="tdastationinfo">
+								<span class="arrive_station">${seatVo.arrival}</span>
+								<span class="arrive_time"> ${seatVo.arriveTime}</span>
+								<p class="arrive_date">${seatVo.arriveDate}</p>
+
+							</td>
+							<td style="width:auto;" id="tdseatinfo" class="text_right">
+								${seatVo.seatType}
+								<div class="base_price">
+									¥<span class="base_price" id="spprice">${seatVo.price}</span>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+		</div>
+		<div class="form_panel" >
+			<h3>乘客信息</h3>
+			<div class="form_field" id ="passengerInfo">
+				<div id="divPassengerAdult1" style="display: block;" class="single_passenger">
+					<div>
+						<strong class="title">第1位乘客</strong>
+						<input type="button" value="删除" onclick="deletePassenger(this)" 
+							class="button button-pill button-primary button-small"> 
+						<a href="javascript:void(0)" onclick="" 
+							class="button button-raised button-primary button-pill button-small btn_zhongtu" style="">从常用联系人中添加</a>
+						
+					</div>
+					<table width="100%" cellpadding="0" cellspacing="0" class="tb_form">
+						<tbody>
+							<tr>
+								<th>姓名</th>
+								<td>
+									<div>
+										<input type="text" class="input_name" style="color: #999;width: 100px;"  >
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th>证件号</th>
+								<td>
+									<div>
+										<input type="text" class="input_idCard" style="color: #999;width: 308px;">
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th>性别</th>
+								<td>
+									<input type="radio" name="gender1" value="1" class="gender" checked="checked"/>男&nbsp;&nbsp;&nbsp;
+									<input type="radio" name="gender1" value="0" class="gender" />女
+								</td>
+							</tr>
+							<tr>
+								<th>学生票</th>
+								<td>
+									<input type="radio" name="isStudent1" value="1" class="isStudent" onclick="caculate()" />是&nbsp;&nbsp;&nbsp;
+									<input type="radio" name="isStudent1" value="0" class="isStudent" onclick="caculate()" checked="checked"/>否
+								</td>
+							</tr>
+						</tbody>
+					</table>	
+				</div>
+				
+			</div id="addPassengerBtn">
+			<a onclick="addPassenger()" class="btn_add_p" id="addPassenger"><b></b>添加乘客</a>
+		</div>
+		<div class="form_panel" id="invoicFormPanel" style="display: block;">
+	        <h3>保险选择</h3>
+	        <div class="form_field invoice_field pop_top_container" id="deliveryTopContainer">
+	                <label class="base_label">
+	                <input  type="checkbox" name="insurance" value="10" onclick="caculate()" id="1">10元交通意外险 ￥<span class="insurancePrice">10</span></label>               
+	                <label class="base_label" style="padding-left: 10px;">
+	                <input type="checkbox" name="insurance" value="20" onclick="caculate()" id="2">20元交通意外险 ￥<span class="insurancePrice">20</span></label>
+	
+	        </div>
+        </div>
+
+		<div class="form_panel">
+			<h3>温馨提示</h3>
+			<div class="form_field ticket">
+				<table width="100%" cellspacing="0" cellpadding="0" class="tb_train_info2">
+					
+					<p id="notion">
+						购买火车票，铁道部官方售票渠道仅限12306.cn和本网站。网络和电话提前30天预售。
+						</br>
+						通过非官方渠道，例如400电话、个人手机和ATM转帐购票，可能会给您带来财产损失。请务必慎重！
+					</p>
+					
+				</table>
+			</div>
+
+		</div>
+		<div class="mask"></div>
+		<div class="mess">
+			<h3>请选择用户信息</h3>
+			<div class="well" >
+				<c:forEach items="${passengers}" var="passenger" varStatus="status">
+				<input type="radio" name="choosePassenger"/>
+					<span class="name">${passenger.name} </span>&nbsp;&nbsp;&nbsp;
+					<span class="idCard">${passenger.cardId}</span>&nbsp;&nbsp;&nbsp;
+					<span class="gender" value="${1-passenger.gender}">${(passenger.gender==1)?"男":"女"}</span>&nbsp;&nbsp;&nbsp;
+					<span class="isStuednt" value="${1-passenger.isStudent}">${(passenger.isStudent==0)?"成人票":"学生票"}</span></br>
+				</c:forEach>
+			</div>
+				<input type="button" value="确定" class="btn1" onclick="confirm()"/>
+				<input type="button" value="取消" class="btn2" onclick="cancel()"/>
+			
+		</div>
+
+	    <div class="price_box">                             
+		    <div class="basefix">
+		    	<strong>应付总额：</strong>
+		        <span class="float_right"><dfn>¥</dfn><span class="base_price total totalprice"></span></span>
+		    </div>
+		</div>
+		<div class="btn_box" style="margin: 20px 0 50px;">
+			<input type="submit" value="同意以上条款，去支付" onclick="" id="btnNext" 
+				class="btn_check" data-toggle="modal" data-target="#myModal">
+		</div>
+	    <div class="modal fade" id="myModal" role="dialog">
+	       <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h3 class="model-title pull-right"></h3>
+          <h3 class="modal-title">订单详细信息: </h3>
+        </div>
+        <div class="modal-body" style="margin-left: 10%; margin-right: 10%;">
+        	<div class="well">
+          	<label style="display: inline-block;" >车次：<span class="checi">${seatVo.trainName}</span></label><br>      
+          	<label style="display: inline-block;" >路程：<span class="depart_station" >${seatVo.departure}</span> ---<span class="arrive_station">${seatVo.arrival}</span> </label><br> 
+          	<label style="display: inline-block;">时间：<span class="depart_date">${seatVo.departDate}</span><span class="depart_time">${seatVo.departTime}</span>
+          		 ---<span class="arrive_date">${seatVo.arriveDate}</span><span class="arrive_time">${seatVo.arriveTime}</span></label><br> 
+          	<label style="display: inline-block;">乘客人数：<span class="passengers"></span></label><br> 
+          	<label style="display: inline-block;">总金额：<span class="totalprice"></span></label>
+          	 </div>
+        <div class="modal-footer" style="text-align:center">
+          <button type="button" class="btn btn-default" data-dismiss="modal" onclick="pay()">确认支付</button>
+          <script type="text/javascript" charset = "UTF-8">
+             $(function(){
+            	 alert('ready');
+            	 alert("itemId"+<%=session.getAttribute("endorseItemId")%>);
+            	 if(<%=session.getAttribute("isEndorse")%> == true){
+            		 //移除添加乘客事件
+            		 $(".btn_add_p").removeAttr("onclick");
+            		 $(".btn_add_p").css("background-color","#cccccc");
+                	 $(".input_name").val("123");
+                	 $.ajax({
+             			  type:"post",
+             			  url:"<%=basePath %>ticket/endorseInfo",
+             			  async: false,
+             			  data: {
+             				endorseItemId : <%=session.getAttribute("endorseItemId")%>
+             			  },
+             		  	  success: function(result){
+             		  		  $(".input_name").val(result.name);
+             		  		  $(".input_idCard").val(result.cardId);
+             		  		  if(result.gender == 1){
+             		  			  $("input:radio[class='gender'][value='1']").attr('checked','true');
+             		  		  }
+             		  		  if(result.isStudent == 1){
+             		  			  $("input:radio[class='isStudent'][value='1']").attr('checked','true');
+             		  		  }
+             		  	  }
+             		  });
+				  }
+             })
+          	 function endorse(){
+          		  $.ajax({
+          			  type:"post",
+          			  url:"<%=basePath %>/endorseAfterPay",
+          			  async: false,
+          			  data: {
+          				endorseItemId : <%=session.getAttribute("endorseItemId")%>
+          			  },
+          		  	  success: function(result){
+          		  		  $.get("<%=basePath%>ticket/cancelEndorse");
+          		  		  if(result == true){
+          		  			  alert('改签成功，您的退款金额将在若干个交易日内退回您的账户，退款到达时间视银行具体情况决定');
+          		  		  }
+          		  		  else{
+          		  			  alert('改签失败');
+          		  		  }
+          		  		  
+          		  	  }
+          		  });
+          	  }
+	           function pay(){
+	        /* 	  $(".input_name").each(function(index,content){	
+	        		  alert(content.val());
+	        	  }) */
+	        	var prices=[];
+	          	var ids=[];
+	          	var errorCode=0;
+	          	var successInfo="你所购买的座位为:\n";
+	          	var flag=1;
+	          	$("div[id^='divPassengerAdult']").each(function(){
+	          		if($(this).find('.input_name').val()==""||$(this).find('.input_idCard').val()==""){
+	          			flag=0;
+	 
+	          		}
+	          	})
+	        	$("input[name='insurance']:checkbox:checked").each(function(){
+	          		prices.push($(this).val());
+	          		ids.push($(this).attr("id"));
+				});
+	          	if(flag==1){          	
+		        	$("div[id^='divPassengerAdult']").each(function(){
+						$.ajax({
+		        			type:"get",
+		        			url:"<%=basePath %>/payTicket",
+		        			 traditional: true,
+		        			 async: false,
+		        			 dataType:"text",
+		        			data:{"trainId":$("#trainId").val(),
+		        				"departure":$(".depart_station").html(),
+		        				"arrival":$(".arrive_station").html(),
+		        				"passenger.name":$(this).find('.input_name').val(),
+		        				"passenger.cardId":$(this).find('.input_idCard').val(),
+		        				"passenger.gender":$("input[class='gender']:checked").val(),
+		        				"passenger.isStudent":$("input[class='isStudent']:checked").val(),
+		        				"seatType":$("#seatType").val(),
+		        				"insuranceId":ids,	
+		        				"insurancePrice":prices,
+		        				"price":Number($("#spprice").text())
+		        			},
+		        			error:function(arg1,arg2,arg3){
+		        				errorCode+=1;
+		        			},
+		        			success:function(msg){
+		        				successInfo+=msg+"\n";
+		        			}
+		        		})
+					})
+					if(errorCode==0){
+						alert(successInfo);
+						if(<%=session.getAttribute("isEndorse")%> == true){
+							endorse();
+						}
+						else{
+							alert('faliure');
+						}
+						
+					}else{
+						alert("支付失败");
+					}
+		        	
+	            } else{
+		             alert("请完善乘客信息");
+		          }
+	          	window.location.href="<%=basePath %>main/test";
+	          }
+          </script>
+        </div>
+      </div>   
+    </div>
+    </div>
+	    </div>
+	</div>
+	<%}else{%>
+	<script>
+		alert("请先登录");
+		window.location.href="<%=basePath %>main/test";
+	</script>
+	<%} %>
+	</body>
+
+</html>

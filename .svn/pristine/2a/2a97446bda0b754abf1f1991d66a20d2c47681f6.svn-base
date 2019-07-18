@@ -1,0 +1,175 @@
+package com.sw1408.controller;
+import java.awt.Color;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.List;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+import com.sw1408.util.HiveUtil;
+
+
+@Controller
+public class EchartMapController {
+	
+	private static Color[] colors = 
+	    {
+	        new Color(155, 188, 255), //    40000
+	        new Color(155, 188, 255), //    39500
+	        new Color(155, 188, 255), //    39000
+	        new Color(155, 188, 255), //    38500
+	        new Color(156, 188, 255), //    38000
+	        new Color(156, 188, 255), //    37500
+	        new Color(156, 189, 255), //    37000
+	        new Color(156, 189, 255), //    36500
+	        new Color(156, 189, 255), //    36000
+	        new Color(157, 189, 255), //    35500
+	        new Color(157, 189, 255), //    35000
+	        new Color(157, 189, 255), //    34500
+	        new Color(157, 189, 255), //    34000
+	        new Color(157, 189, 255), //    33500
+	        new Color(158, 190, 255), //    33000
+	        new Color(158, 190, 255), //    32500
+	        new Color(158, 190, 255), //    32000
+	        new Color(158, 190, 255), //    31500
+	        new Color(159, 190, 255), //    31000
+	        new Color(159, 190, 255), //    30500
+	        new Color(159, 191, 255), //    30000
+	        new Color(159, 191, 255), //    29500
+	        new Color(160, 191, 255), //    29000
+	        new Color(160, 191, 255), //    28500
+	        new Color(160, 191, 255), //    28000
+	        new Color(161, 192, 255), //    27500
+	        new Color(161, 192, 255), //    27000
+	        new Color(161, 192, 255), //    26500
+	        new Color(162, 192, 255), //    26000
+	        new Color(162, 193, 255), //    25500
+	        new Color(163, 193, 255), //    25000
+	        new Color(163, 193, 255), //    24500
+	        new Color(163, 194, 255), //    24000
+	        new Color(164, 194, 255), //    23500
+	        new Color(164, 194, 255), //    23000
+	        new Color(165, 195, 255), //    22500
+	        new Color(166, 195, 255), //    22000
+	        new Color(166, 195, 255), //    21500
+	        new Color(167, 196, 255), //    21000
+	        new Color(168, 196, 255), //    20500
+	        new Color(168, 197, 255), //    20000
+	        new Color(169, 197, 255), //    19500
+	        new Color(170, 198, 255), //    19000
+	        new Color(171, 198, 255), //    18500
+	        new Color(172, 199, 255), //    18000
+	        new Color(173, 200, 255), //    17500
+	        new Color(174, 200, 255), //    17000
+	        new Color(175, 201, 255), //    16500
+	        new Color(176, 202, 255), //    16000
+	        new Color(177, 203, 255), //    15500
+	        new Color(179, 204, 255), //    15000
+	        new Color(180, 205, 255), //    14500
+	        new Color(182, 206, 255), //    14000
+	        new Color(184, 207, 255), //    13500
+	        new Color(186, 208, 255), //    13000
+	        new Color(188, 210, 255), //    12500
+	        new Color(191, 211, 255), //    12000
+	        new Color(193, 213, 255), //    11500
+	        new Color(196, 215, 255), //    11000
+	        new Color(200, 217, 255), //    10500  
+	        new Color(204, 219, 255), //    10000
+	        new Color(208, 222, 255), //    9500
+	        new Color(214, 225, 255), //    9000
+	        new Color(220, 229, 255), //    8500
+	        new Color(227, 233, 255), //    8000
+	        new Color(235, 238, 255), //    7500
+	        new Color(245, 243, 255), //    7000
+	        new Color(255, 249, 253), //    6500
+	        new Color(255, 243, 239), //    6000
+	        new Color(255, 236, 224), //    5500
+	        new Color(255, 228, 206), //    5000
+	        new Color(255, 219, 186), //    4500
+	        new Color(255, 209, 163), //    4000
+	        new Color(255, 196, 137), //    3500
+	        new Color(255, 180, 107), //    3000
+	        new Color(255, 161,  72), //    2500
+	        new Color(255, 137,  18), //    2000
+	        new Color(255, 109,   0), //    1500 
+	        new Color(255,  51,   0), //    1000
+	    };
+
+    @RequestMapping("/map")
+    public ModelAndView page() throws SQLException {
+    	ModelAndView mav = new ModelAndView();
+    	List<List<String>> items = getData();
+    	mav.addObject("items", items);
+    	List<String> dataNames = new ArrayList<>();
+    	for (int i = 0; i < items.size(); i++) {
+    		dataNames.add("data"+i);
+    	}
+    	mav.addObject("dataNames", dataNames);
+    	mav.setViewName("admin/map");
+    	return mav;
+    }
+
+    public List<List<String>> getData() throws SQLException {
+    	String s = "";
+    	HiveUtil hiveUtil = new HiveUtil("hapa");
+    	Map<String, String> stationMap = new HashMap<>();
+    	ResultSet result = hiveUtil.executeQuery("select * from stations");
+    	
+    	while (result.next()) {
+    		stationMap.put(result.getString(1), result.getString(2));
+    	}
+    	
+    	//TO DO: change to select path, count(path) from travel group by path
+    	ResultSet paths = hiveUtil.executeQuery("select path, count(path) from travel group by path");
+    	
+    	List<Path> pathList = new ArrayList<>();
+    	while (paths.next()) {
+    		String[] split = paths.getString(1).split("-");
+    		String from = stationMap.get(split[0]);
+    		String to = stationMap.get(split[1]);
+    		int count = paths.getInt(2);
+    		pathList.add(new Path(from, to, count));
+    		System.out.println(from + to + count);
+    	}
+		return convertPathDataToJsonData(pathList);
+    }
+    
+    private List<List<String>> convertPathDataToJsonData(List<Path> paths) {
+    	List<String> result = new ArrayList<>();
+    	List<List<String>> results = new ArrayList<>();
+    	Map<Integer, List<String>> resultMap = new HashMap<>();
+    	for (Path path: paths) {	
+    		int width = 2;
+    		//TO DO: 将count映射到颜色
+    		int colorIndex = (int)(Math.random() * 78);
+    		Color c =  colors[colorIndex];
+    		String color = String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue());;
+    		String s= "\n[{name: '" + path.from + "'}," + "{name: '" + path.to + "'}," + "{color: '" + color + "', width: " + width + "}]";
+    		if (!resultMap.containsKey(colorIndex)) {
+    			resultMap.put(colorIndex, new ArrayList<String>());
+    		}
+    		resultMap.get(colorIndex).add(s);
+    	}
+    	results.addAll(resultMap.values());
+    	return results;
+    }
+     
+    private class Path{
+    	String from;
+    	String to;
+    	int count;
+    	
+    	Path(String from , String to, int count) {
+    		this.from = from;
+    		this.to= to;
+    		this.count = count;
+    	}
+    	@Override
+		public String toString() {
+    		return from + " " + to + " " + count;
+    	}
+    }
+}

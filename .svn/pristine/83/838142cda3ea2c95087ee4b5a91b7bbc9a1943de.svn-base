@@ -1,0 +1,119 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
+%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<%
+	request.setCharacterEncoding("utf-8");
+%>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+ label.error{
+ 	color: red;
+ }
+</style>
+</head>
+<link rel="stylesheet" href="../client/css/SXY-addFrequentContacts.css" />
+<script type="text/javascript" src="../plugins/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="../plugins/JqueryValidate/js/jquery.validate.js"></script>
+<script type="text/javascript" src="../plugins/JqueryValidate/js/messages_zh_SXY.js"></script>
+<script type="text/javascript">
+	$(function() {
+		$("#form_addFrequentContacts").validate({
+			onblur:true,
+			rules:{
+				name:{
+					required:true
+				},
+				cardId:{
+					required:true,
+					rangelength:[18,18]
+				}
+			}
+		});
+	});
+</script>
+
+<body style="width: 82.4%; margin: 0 auto; min-width: 1500px;">
+
+	<div class="main">
+		<div class="order-item">
+			<div class="lay-hd">添加常用联系人</div>
+			<form id="form_addFrequentContacts" name="form_addFrequentContacts"
+				action="<%=basePath%>client/addPassenger"
+				enctype="mutipart/form-data">
+				<div>
+					<br /> &nbsp;
+					<h2>
+						&nbsp;&nbsp;基本信息<span class="red">(*为必填项)</span>
+					</h2>
+					<hr />
+					<br /> <br />
+					<div class="addPassenger_message">
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="red">*</span>姓名：<input
+							type="text" style="width: 200px;" id="name" name="name" /><br />
+						<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+							class="red">*</span>性别： <input type="radio" name="gender"
+							checked="checked" value="1" />男&nbsp;&nbsp;&nbsp; <input
+							type="radio" name="gender" value="0" />女<br /> <br />
+						&nbsp;国家/地区： <select style="width: 200px;" id="country"
+							name="country">
+							<option value="中国">中国</option>
+							<option value="美国">美国</option>
+							<option value="英国">英国</option>
+						</select> <br /> <br /> <span class="red">*</span>证件类别： <select
+							style="width: 200px;" id="cardType" name="cardType">
+							<option value="中国">二代身份证</option>
+							<option value="美国">暂住证</option>
+							<option value="英国">某某证</option>
+						</select> <br /> <br /> <span class="red">*</span>证件号码： <input
+							type="text" style="width: 200px;" id="cardId" name="cardId" /> <br />
+						<br /> &nbsp;&nbsp;核验状态：待核验 <br /> <br /> <br />
+					</div>
+
+					&nbsp;
+					<h2>
+						&nbsp;&nbsp;联系方式<span class="red">(*为必填项)</span>
+					</h2>
+					<hr />
+					<br /> <br />
+					<div class="addPassenger_message">
+						手机号码：<input type="text" style="width: 200px;" id="telNum"
+							name="telNum" /><br /> <br /> 固定电话：<input type="text"
+							style="width: 200px;" id="phoneNum" name="phoneNum" /><br /> <br />
+						电子邮件：<input type="text" style="width: 200px;" id="email"
+							name="email" /><br /> <br />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;地址：<input type="text"
+							style="width: 200px;" id="adress" name="adress" /><br /> <br />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;邮编：<input type="text"
+							style="width: 200px;" id="postCode" name="postCode" /><br /> <br />
+					</div>
+
+					<br />&nbsp;
+					<h2>
+						&nbsp;&nbsp;附加信息<span class="red">(*为必填项)</span>
+					</h2>
+					<hr />
+					<br /> <br />
+					<div class="addPassenger_message">
+						<span class="red">*</span>乘客类别： <select style="width: 200px;"
+							id="passengerType" name="isStudent">
+							<option value="1">成人</option>
+							<option value="0">学生</option>
+						</select>
+					</div>
+				</div>
+				<input id="btn_addFrequentContacts" type="submit" value="添加常用联系人" />
+			</form>
+		</div>
+	</div>
+
+</body>
+
+</html>

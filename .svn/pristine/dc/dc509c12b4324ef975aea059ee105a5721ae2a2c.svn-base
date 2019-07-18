@@ -1,0 +1,8 @@
+package com.sw1408.service;
+
+import com.sw1408.vo.SeatVo;
+import com.sw1408.vo.TrainSeatVo;
+
+public interface SelectSeatService {
+	public SeatVo selectSeat(TrainSeatVo trainSeat); 
+}

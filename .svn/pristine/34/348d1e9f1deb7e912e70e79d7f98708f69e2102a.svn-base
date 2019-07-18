@@ -1,0 +1,171 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+
+.content {
+	width: 100%;
+	margin: 0 auto
+}
+
+.lay-hd {
+	background-color: #2082C5;
+	height: 32px;
+	line-height: 30px;
+	color: white;
+	padding-left: 20px;
+	font-size: 14px;
+	position: relative
+}
+
+.order_head{
+	margin-top: 20px;
+}
+
+.order-item {
+	border: 1px solid #41bae2;
+	min-height: 500px;
+}
+
+
+.table-c {
+	margin: 20px auto;
+	width: 100%;
+	border: 1px solid #c0d7e4;
+	background: #fff;
+	color: #666;
+}
+
+.table-c th {
+	line-height: 40px;
+	width: 14%;
+	background: #eef1f8;
+	font-weight: 400;
+	color: #333;
+	text-align: center;
+	
+}
+.table-c tr{
+	line-height: 50px;
+	width: 14%;
+	padding: 6px 0;
+	text-align: center;
+}
+.table-c td {
+	line-height: 30px;
+	width: 14%;
+	padding: 6px 0;
+	text-align: center;
+}
+.order-item-bd .t-foot span {
+	margin-left: 20px
+}
+
+.order-item-bd .t-foot strong {
+	font-size: 14px
+}
+
+.order-item-bd .ccxx {
+	position: relative;
+	text-align: center;
+}
+
+* button {
+	background-color: #FF8000;
+	width: 70px;
+	height: 30px;
+	border-radius: 7px;
+	color: white;
+	cursor: pointer;
+}
+
+.order-tab-bd .order-select {
+	margin: 0 auto;
+	position: relative;
+	top: 24px;
+}
+
+.order-tab-bd {
+	height: 60px;
+}
+
+.returnTicket {
+	z-index: 9998;
+	width: 590px;
+	height: 310px;
+	background-color: white;
+	position: relative;
+	left: 650px;
+	top: 110px;
+	display: none;
+	border-radius: 20px;
+}
+.re_head {
+	width: 100%;
+	height: 40px;
+	background-color: #2588C9;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	line-height: 40px;
+	color: white;
+	font-size: 19px;
+	position: absolute;
+}
+a {
+	text-decoration: none;
+}
+.re_body {
+	width: 100%;
+	height: 210px;
+	background-color: white;
+	position: absolute;
+	top: 40px;
+}
+.re_body_left {
+	position: absolute;
+	width: 155px;
+	height: 210px;
+	float: left;
+}
+.re_body .re_body_right {
+	position: absolute;
+	left: 155px;re_body
+	
+	width: 435px;
+	height: 180;
+	float: left;
+	margin-top: 30px;
+	line-height: 25px;
+}
+.re_foot{
+	background-color: #FFFBE5;
+	font-size: 14px;
+	color: #666666;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	position: absolute;
+	top: 260px;
+	
+}
+/*用于覆盖当前界面的灰色div*/
+.returnTicket_cover {
+	z-index: 9997;
+	position: fixed;
+	top: 0;
+	left: 0;
+    width:100%;
+    height:100%;
+    background:#000;
+    opacity: 0.4;
+    filter: alpha(opacity=40);
+    display: none;
+}
+.dividing_line {
+	position: absolute;
+	top: 250px;
+}
+
+.order-select span{
+	margin-left: 7%;
+	text-align: center;
+}

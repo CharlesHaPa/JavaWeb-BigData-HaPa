@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sw1408.mapper.StationMapper">
+    <select id="selectStationById" resultType="com.sw1408.po.Station">
+        SELECT * FROM STATION WHERE ID = #{id}
+    </select>
+
+    <select id="selectStationByName" resultType="com.sw1408.po.Station">
+        SELECT * FROM STATION WHERE NAME = #{name}
+    </select>
+</mapper>

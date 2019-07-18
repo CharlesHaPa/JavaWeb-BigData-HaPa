@@ -1,0 +1,29 @@
+var index = 0;
+var play_setInterval = null;
+
+$(function(){
+	$(".b_btn li").mouseover(function(){
+		clearInterval(play_setInterval);
+		index = $(this).index();
+		$(".b_pic li").eq(index).stop(true, true).fadeIn(500).siblings().css("display","none");
+		$(".b_btn li").eq(index).attr("class", "no").siblings().removeClass();
+	}).mouseout(function() {
+		auto_banner();
+	})
+})
+
+function auto_banner() {
+	play_setInterval = setInterval(function() {
+		index++;
+		var length = $(".b_pic").find("li").length;
+		if(index > length-1) {
+			index = 0;
+		}
+		//console.log(index);
+		$(".b_pic li").eq(index).stop(true, true).fadeIn(500).siblings().css("display","none");
+		$(".b_btn li").eq(index).attr("class", "no").siblings().removeClass();
+	}, 2500);
+}
+
+//运行banner
+auto_banner();

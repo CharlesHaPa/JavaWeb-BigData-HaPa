@@ -1,0 +1,58 @@
+package com.sw1408.test.service;
+
+import com.sw1408.service.ItemService;
+import com.sw1408.vo.Filter;
+import com.sw1408.vo.ItemDetail;
+
+import java.util.List;
+import java.sql.Date;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+/**
+ * Created by DLETC on 2017/7/4.
+ */
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("/applicationContext.xml")
+public class ItemServiceTest {
+    @Autowired
+    private ItemService itemService;
+
+   /* @Test
+    public void shouldPrintItemDetail() {
+        System.out.println(itemService.getItemDetail(1));
+    }
+
+    @Test
+    public void shouldPirntQueriedItemDetailByStatusAndCreateDateRange() {
+        System.out.println(itemService.queryItemDetailByStatusAndCreateDateRange("未支付", java.sql.Date.valueOf("2017-7-1"), java.sql.Date.valueOf("2017-7-5")));
+    }
+
+    @Test
+    public void shouldPrintQueriedItemDetailByPassengerName() {
+        System.out.println(itemService.queryItemDetailByPassengerName("sxy"));
+    }*/
+    
+    @Test
+    public void test() {
+
+    	 List<ItemDetail> details = itemService.queryItemDetailByClientId(1);
+    	 Filter<ItemDetail> f = new Filter<ItemDetail>(details);
+    	 System.out.println("lllllllllllllllllllllllllllllllllllllll");
+    	 f.filter("startDepartTime", new Date(new java.util.Date().getTime()).toString());
+    	 for (ItemDetail detail: f.result()) {
+    		 System.out.println(detail);
+    	 }
+    	 System.out.println(new Date(new java.util.Date().getTime()).toString());
+    	 /*System.out.println("lllllllllllllllllllllllllllllllllllllll");
+    	 f.filter("endDepartTime", new Date(new java.util.Date().getTime()).toString());
+    	 for (ItemDetail detail: f.result()) {
+    		 System.out.println(detail);
+    	 }*/
+    }
+}

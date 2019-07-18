@@ -1,0 +1,24 @@
+package com.sw1408.util.mapreduce;
+
+public class MapReduceParams {
+
+	private String name;
+	private String inputPath;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getInputPath() {
+		return inputPath;
+	}
+
+	public void setInputPath(String inputPath) {
+		this.inputPath = inputPath;
+	}
+
+}

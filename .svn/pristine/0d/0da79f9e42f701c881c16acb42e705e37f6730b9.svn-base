@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sw1408.mapper.UserMapper">
+
+	<select id="selectOneByNameAndAge" resultType="com.sw1408.po.User">
+		SELECT * FROM TB_USER WHERE NAME=#{name} AND AGE=#{age}
+	</select>
+	
+	<select id="selectAllUser" resultType="com.sw1408.po.User">
+		SELECT * FROM TB_USER
+	</select>
+	
+	<insert id="insertOne" >
+		INSERT INTO　TB_USER(NAME,SEX,AGE) VALUES (#{name},#{sex},#{age})
+	</insert>
+
+</mapper>

@@ -1,0 +1,123 @@
+package com.sw1408.vo;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.sw1408.util.AvailableSeat;
+
+public class AvailableTrain {
+
+
+
+	private int trainId;
+	private String trainName;
+
+	private String type;
+    private String fromStation;
+    private String toStation;
+    private String startDate;
+	private String endDate;
+	private Integer intervalHour;
+	private Integer intervalMin;
+	List<AvailableSeat> availableSeat=new ArrayList<AvailableSeat>();
+	
+	public AvailableTrain(int trainId, String trainName, String type, String fromStation, String toStation,
+			String startDate, String endDate, Integer intervalHour, Integer intervalMin,
+			List<AvailableSeat> availableSeat) {
+		super();
+		this.trainId = trainId;
+		this.trainName = trainName;
+		this.type = type;
+		this.fromStation = fromStation;
+		this.toStation = toStation;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.intervalHour = intervalHour;
+		this.intervalMin = intervalMin;
+		this.availableSeat = availableSeat;
+	}
+
+
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+    public AvailableTrain(){
+    	
+    }
+    
+	public int getTrainId() {
+		return trainId;
+	}
+	public void setTrainId(int trainId) {
+		this.trainId = trainId;
+	}
+	public String getTrainName() {
+		return trainName;
+	}
+	public void setTrainName(String trainName) {
+		this.trainName = trainName;
+	}
+	public String getFromStation() {
+		return fromStation;
+	}
+	public void setFromStation(String fromStation) {
+		this.fromStation = fromStation;
+	}
+	 public String  getStartDate() {
+			return startDate;
+	}
+	public void setStartDate(String  startDate) {
+			this.startDate = startDate;
+	}
+
+	public String getToStation() {
+		return toStation;
+	}
+	public void setToStation(String toStation) {
+		this.toStation = toStation;
+	}
+	public List<AvailableSeat> getAvailableSeat() {
+		return availableSeat;
+	}
+	public void setAvailableSeat(List<AvailableSeat> availableSeat) {
+		this.availableSeat = availableSeat;
+	}
+	
+    public String  getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+	public Integer getIntervalHour() {
+		return intervalHour;
+	}
+
+	public void setIntervalHour(Integer intervalHour) {
+		this.intervalHour = intervalHour;
+	}
+
+	public Integer getIntervalMin() {
+		return intervalMin;
+	}
+
+	public void setIntervalMin(Integer intervalMin) {
+		this.intervalMin = intervalMin;
+	}
+
+	@Override
+	public String toString() {
+		return "AvailableTrain [trainId=" + trainId + ", trainName=" + trainName + ", type=" + type + ", fromStation="
+				+ fromStation + ", toStation=" + toStation + ", startDate=" + startDate + ", endDate=" + endDate
+				+ ", intervalHour=" + intervalHour + ", intervalMin=" + intervalMin + ", availableSeat=" + availableSeat
+				+ "]";
+	}
+
+}

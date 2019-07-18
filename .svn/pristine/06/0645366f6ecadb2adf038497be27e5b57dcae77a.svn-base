@@ -1,0 +1,123 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
+%>
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<title>Bootstrap Example</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="<%=basePath%>assets/css/bootstrap.min.css">
+		<script type="text/javascript" src="<%=basePath%>assets/js/jquery-3.1.1.js"></script>
+		<script type="text/javascript" src="<%=basePath%>assets/js/bootstrap.min.js"></script>
+		
+		<script>
+		$(document).ready(function(){
+		    $('[data-toggle="tooltip"]').tooltip();   
+		});
+		function getParams() {
+			var sqoopParams = {
+		            databaseType:$("#databaseType").val(),
+		            host:$("#host").val(),
+		            databasePort:$("#databasePort").val(),
+		            databaseName:$("#databaseName").val(),
+		            userName:$("#userName").val(),
+		            password:$("#password").val(),
+		            importView:$("#importView").val(),
+		            condition:$("#condition").val(),
+		            hiveDatabase:$("#hiveDatabase").val(),
+		            hiveTable:$("#hiveTable").val(),
+		        };
+			return sqoopParams;
+		}
+		$(document).ready(function(){
+			$("#testConnection").click(function() {
+				$.ajax({
+			    	type: "POST",
+			        url: "/HaPa/admin/map/testConnection",
+			        data: getParams(),
+			        dataType: "json",
+			        success: function(data){
+			        	alert(data.status);
+			        }
+			    });
+			});
+			
+			$("#submit").click(function() {
+				$.ajax({
+			    	type: "POST",
+			        url: "/HaPa/admin/map/transferToHive",
+			        data: getParams(),
+			        dataType: "json",
+			        success: function(data){
+			        	alert("success");
+			        }
+			    });
+			});
+		});
+		
+			
+			
+		</script>
+	</head>
+	
+	<body>
+
+		<div class="container">
+			<form>
+				<div class="form-group form-inline" id="sourceDatabase">
+					<label>source database:</label>
+					<select class="form-control" id="databaseType">
+						<option>oracle</option>
+						<option>mysql</option>
+					</select>
+					<input type="text" class="form-control" id="host" placeholder="host">
+					<span style="font-size:large; font-weight: 900;"> : </span>
+					<input type="text" class="form-control" id="databasePort" placeholder="port" style="max-width:80px; min-width:60px">
+					<span style="font-size:large; font-weight: 900;"> / </span>
+					<input type="text" class="form-control" id="databaseName" placeholder="database name">
+				</div>
+					
+				<div class="form-group form-inline">
+					<label for="pwd">Login option:</label>
+					<span class="glyphicon glyphicon-user"></span>
+					<input type="text" class="form-control" id="userName" placeholder="userName">
+					<span class="glyphicon glyphicon-lock"></span>
+					<input type="password" class="form-control" id="password" placeholder="password">
+					<button type="button" class="btn btn-success" id="testConnection">测试连接</button>
+				</div>
+				
+				<div class="form-group form-inline">
+					<label for="pwd">Import View:</label>
+					<span class="glyphicon glyphicon-list-alt" data-toggle="tooltip" title="select xxx from XXX"></span>
+					<input type="text" class="form-control" id="importView" placeholder="view">
+					<span class="glyphicon glyphicon-filter" data-toggle="tooltip" title="[where] condition"></span>
+					<input type="text" class="form-control" id="condition" placeholder="condition">
+				</div>
+				<div class="form-group form-inline">
+					<label>taget database:</label>
+					
+					<input type="text" class="form-control" id="hiveDatabase" placeholder="hive database">
+					<input type="text" class="form-control" id="hiveTable" placeholder="hive table">
+				</div>
+				<div class="form-group">
+					<label for="pwd">overwrite:</label>
+					<input type="text" class="form-control" id="overwrite">
+				</div>
+				
+				<button type="button" class="btn btn-success" id="submit">Submit</button>
+				
+			</form>
+		</div>
+
+	<script type="text/javascript">
+		
+	</script>
+	</body>
+
+</html>

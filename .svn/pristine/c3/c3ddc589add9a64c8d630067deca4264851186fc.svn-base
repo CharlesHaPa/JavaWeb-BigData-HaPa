@@ -1,0 +1,35 @@
+package com.sw1408.service.impl;
+
+import com.sw1408.mapper.ItemMapper;
+import com.sw1408.mapper.TicketMapper;
+import com.sw1408.po.Item;
+import com.sw1408.po.Ticket;
+import com.sw1408.service.ItemService;
+import net.sf.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+/**
+ * Created by DLETC on 2017/7/4.
+ */
+@Service
+public class ItemServiceImpl implements ItemService {
+    @Autowired
+    private ItemMapper itemMapper;
+    @Autowired
+    private TicketMapper ticketMapper;
+
+    @Override
+    public String queryItemDetail(int id) {
+        Item item = itemMapper.selectItemById(id);
+        Ticket ticket = ticketMapper.selectTicketById(item.getTicketId());
+        JSONObject map = new JSONObject();
+        map.put("id", item.getId());
+        map.put("clientId", item.getClientId());
+        map.put("createDate", item.getCreateDate().toString());
+        map.put("payDate", item.getPayDate().toString());
+        map.put("totalFee", item.getTotalFee());
+        map.put("Ticket", ticket);
+        return map.toString();
+    }
+}

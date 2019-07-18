@@ -1,0 +1,115 @@
+<%@page import="java.util.List"%>
+<%@page import="com.sw1408.vo.ItemDetail"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+		 pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<% 
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
+%>
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>item</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" href="../item/css/zpp.css" />
+		<script type="text/javascript" src="../item/js/zpp.js" ></script>
+	</head>
+	<body style="width:82.4%;margin: 0 auto;min-width: 1500px;">
+		<div class="itemContent">
+			<div class="order-item">
+				<div class="lay-hd">已完成订单</div>
+					<div class="order-tab-bd">
+						<div class="order-select">
+							<span style="margin-left: 100px;">
+								<select id="selectItemType">
+								    <option value="allTravel" ${itemType.equals("notTravel")?" selected=selected" : ""} }>全部订单</option>
+									<option value="notTravel" ${itemType.equals("notTravel")?" selected=selected" : ""} }>未出行</option>
+									<option value="Traveled" ${itemType.equals("Traveled")? "selected=selected" : ""}>已出行</option>
+									<option value="returned" ${itemType.equals("returned")? "selected=selected" : ""}>已退票</option>
+								</select>
+							</span>
+							<!-- <span style="margin-left: 100px;">
+								<select name="select-condition" id ="selectType">
+									<option value="byDepartDate">按乘车日期查询</option>
+									<option value="byItemDate" selected="selected" >按订票日期查询</option>
+						        </select>
+							</span> -->
+							<span style="margin-left: 90px;margin-right: 90px;">按乘车日期查询</span>
+							<input id="fromDate" type="date" name="fromDate" value="${fromDate}"/>
+							<span style="margin-left: 90px;"><input id="toDate" type="date" name="toDate" value="${toDate}"/></span>
+							<span style="margin-left: 100px;"><button type="submit" onclick="commit()">查询</button></span>
+							<!-- <span style="margin-left: 100px;"><button type="submit" onclick="location='/HaPa/item/queryDetails?itemType=notDepart&option=byDepartDate&fromDate=1111-1-1&toDate=1111-1-1'">未出行</button></span>
+							<span style="margin-left: 100px;"><button type="submit" onclick="location='/HaPa/item/queryDetails?itemType=hasDepart&option=byDepartDate&fromDate=1111-1-1&toDate=1111-1-1'">已出行</button></span> -->
+						</div>
+					</div>
+					<div class="order-item-bd">
+							<table class="table-c">
+								<c:forEach items="${itemDetailList}" var="itemDetail" varStatus="status">
+									<tr class="order_head">
+										<th width="37">序号</th>
+										<th width="145">车次信息</th>
+										<th width="120">席位信息</th>
+										<th width="100" >旅客信息</th>
+										<th width="110">票款金额</th>
+										<th width="100">车票状态</th>
+										<th>操作</th>
+									</tr>
+
+									<tr>
+										<td><input type="checkbox" class="check" />
+											<label>${status.index + 1}</label>
+										</td>
+										<td>
+											<div class="ccxx">${itemDetail.getDepartTime().toString()} 开<br clear="none" /> ${itemDetail.getTrainName()} ${itemDetail.getDeparture()} ${itemDetail.getArrival()}</div>
+										</td>
+										<td>${itemDetail.getSeatInfo()}<br clear="none" /> </td>
+										<td>${itemDetail.getPassengerName()}<br clear="none" />${itemDetail.getPassengerCardId()}</td>
+										<td>${itemDetail.getTicketType()}<span class="colorA">${itemDetail.getPrice()} 元</span>
+										</td>
+										<td>${itemDetail.getTicketStatus()}</td>
+										<td>
+											<button type="button" onclick="fun_return(${itemDetail.getOrderId()},${itemDetail.getClientId()},${itemDetail.getPrice()},${itemDetail.getRate()})"
+												class="open_rec_interface btn${itemDetail.getStatus()}">退票</button>
+											<!-- <button type="button" onclick=""  class="open_rec_interface">改签</button> -->
+										</td>
+									</tr>
+									<tr>
+										<td colspan="7">
+											<div class="t-foot"><span style="margin-left: 900px;">订单号：<strong>${itemDetail.getOrderId()}</strong></span></div>
+											<div class="cline"></div>
+										</td>
+									</tr>
+								</c:forEach>
+							</table>
+					</div>
+			</div>
+			<!--退票弹窗开始-->
+			<div class="returnTicket">
+				<div class="re_head">
+					   <span style="margin-left: 30px;">交易提示</span>
+					   <a href="#" class="re_close"><span style="margin-left: 452px; color: white;font-size: 18px;">X</span></a>
+				</div>
+				<div class="re_body">
+					<div class="re_body_left">
+						<img src="../item/img/doubt.jpg" width="155px" height="207px" />
+					</div>
+					<div class="re_body_right"><!-- 此处为将显示退票确认信息 --></div>
+				</div>
+				<div class="dividing_line">
+					<hr style="border: 1px dashed #666666;width: 590px;"></hr>
+				</div>
+				<div class="re_foot">
+					&nbsp;&nbsp;退票费按如下规则核收：票面乘车站开车时间前15天（不含）以上不收取退票费，48小时以上的按票价5%计，24小时以上、不足48小时的 按票价10%计，不足24小时的按票价20%计。改签或变更到站后的车票乘车日期在春运期间的，退票时一律按开车时间前不足24小时标准核收退票费。<br>
+				</div>
+		    </div>
+			<!--退票弹窗结束-->
+	
+    	    <!--用于覆盖当前界面的灰色界面-->
+    		 <div class="returnTicket_cover"></div>
+		</div>
+	</body>
+
+</html>

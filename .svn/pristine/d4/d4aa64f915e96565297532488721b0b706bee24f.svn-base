@@ -1,0 +1,20 @@
+package com.sw1408.service;
+import java.sql.ResultSet;
+import java.util.List;
+
+import java.util.List;
+
+public interface AdminService {
+	String getMaleAnalysis(String year) ;
+	String getFamaleAnalysis(String year) ;
+	List<String> countItemByHour(String year);
+	String getSeatInfo(String departure,String arrival,String date);
+	ResultSet showTop5TicketsNumGroupByCity(String year);
+	int showAllTicketsNum(String year) throws Exception;
+	public boolean addTables(String table,String dir);
+	public List<String> getTables(String db,String dbName);
+	public void delTable(String table);
+	public boolean runCmd(String sql,String dir);
+	public List<String> getDbs();
+	public List<String> getStructure(String db,String table);
+}

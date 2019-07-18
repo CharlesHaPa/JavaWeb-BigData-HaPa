@@ -1,0 +1,46 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	HELLO!
+	<br />
+
+	<table>
+		<thead>
+			<tr>
+				<td></td>
+				<td>姓名</td>
+				<td>性别</td>
+				<td>证件号</td>
+			</tr>
+		</thead>
+		<tbody>
+			<c:forEach items="${list}" var="list" varStatus="status">
+				<tr>
+					<td>${status.index + 1}</td>
+					<td>${list.name}</td>
+					<td>${(list.gender==1)?"男":"女"}</td>
+					<td>${list.cardId}</td>
+				</tr>
+			</c:forEach>
+		</tbody>
+	</table>
+
+	<a href="javascript:void(0)"
+		style="display:${pageInfo.pageNum == 1?'':''}"
+		onclick="changePage(${pageInfo.pageNum - 1})">上一页</a>
+	<c:forEach begin="0" end="${pageInfo.pages }" varStatus="status">
+		${(pageInfo.pageNum == pageInfo.pages?pageInfo.pageNum - 1:pageInfo.pageNum) + status.index}
+	</c:forEach>
+	<a href="javascript:void(0)"
+		style="display:${pageInfo.pageNum == pageInfo.pages?'':''}"
+		onclick="changePage(${pageInfo.pageNum + 1})">下一页</a>
+
+</body>
+</html>

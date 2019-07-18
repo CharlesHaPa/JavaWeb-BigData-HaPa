@@ -1,0 +1,25 @@
+package com.sw1408.controller;
+
+import java.io.File;
+
+import javax.xml.ws.Response;
+
+import org.apache.catalina.connector.Request;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class PageController {
+	
+	@RequestMapping("/test/{pageName}")
+	public String showUserPage(@PathVariable String pageName){
+		return "user" + File.separator + pageName;
+	}
+	
+	@RequestMapping("/main/{pageName}")
+	public String showOrderPage(@PathVariable String pageName){
+		return "main" + File.separator + pageName;
+	}
+
+}

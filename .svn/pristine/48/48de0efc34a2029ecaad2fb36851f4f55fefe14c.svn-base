@@ -1,0 +1,48 @@
+package com.sw1408.service.impl;
+
+import java.util.List;
+
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.sw1408.mapper.UserMapper;
+import com.sw1408.po.User;
+import com.sw1408.service.UserService;
+
+@Transactional(propagation=Propagation.REQUIRED,isolation=Isolation.DEFAULT)
+@Service
+public class UserServiceImpl implements UserService {
+	
+	@Resource
+	UserMapper userMapper;
+
+	@Override
+	public User userLogin(User user) {
+		User result = userMapper.selectOneByNameAndAge(user);
+		if (result != null) {
+			return result;
+		}
+		return null;
+	}
+
+	@Override
+	public List<User> showUser() {
+		List<User> list = userMapper.selectAllUser();
+		return list;
+	}
+
+	@Override
+	public boolean userRegister(User user) {
+		int result=userMapper.insertOne(user);
+		if(result>0){
+			return true;
+		}
+		return false;
+	}
+
+}

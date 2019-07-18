@@ -1,0 +1,15 @@
+package com.sw1408.mapper;
+
+import com.sw1408.po.Seat;
+
+/**
+ * Created by DLETC on 2017/7/4.
+ */
+public interface SeatMapper {
+    /**
+     *
+     * @param seat
+     * @return
+     */
+    public int addSeat(Seat seat);
+}

@@ -1,0 +1,44 @@
+package com.sw1408.controller;
+
+
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.sw1408.service.AdminService;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+
+
+@Controller
+public class CharController {
+	@Resource
+	AdminService adminService;
+	@RequestMapping(value = "/seatRate")
+	public ModelAndView register(Model model) throws Exception {
+		ModelAndView modelAndView=new ModelAndView();	
+		modelAndView.setViewName("admin/seatRate");
+		return modelAndView;
+	}
+	@ResponseBody
+	@RequestMapping(value = "/getSeatInfo",produces="html/text;charset=UTF-8")
+	public String  getSeatInfo(HttpServletRequest request) throws Exception {
+		return adminService.getSeatInfo(request.getParameter("departure")
+				,request.getParameter("arrival"),request.getParameter("date"));
+	}
+}

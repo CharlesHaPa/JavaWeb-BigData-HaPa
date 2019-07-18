@@ -1,0 +1,27 @@
+package com.sw1408.controller;
+
+import com.sw1408.service.ItemService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+@Controller
+public class ItemController {
+    @Autowired
+    private ItemService itemService;
+
+    /**
+     *
+     * @param id
+     * @return
+     * @author dkq
+     */
+    @RequestMapping(value = "/item/queryDetail", produces = {"application/json; charset=UTF-8"})
+    public @ResponseBody
+    String queryItemDetail(@RequestParam int id) {
+        return itemService.queryItemDetail(id);
+    }
+
+}

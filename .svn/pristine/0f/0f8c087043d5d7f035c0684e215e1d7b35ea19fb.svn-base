@@ -1,0 +1,12 @@
+mysql.driverClass=com.mysql.jdbc.Driver
+mysql.jdbcurl=jdbc:mysql://etc19-01:3306/hive
+mysql.user=root
+mysql.password=root
+hive.driverClass=org.apache.hive.jdbc.HiveDriver
+hive.jdbcurl=jdbc:hive2://etc19-01:10010/default
+localPath=/home/hadoopadmin/webData
+uploadPath=/input/
+HADOOP_URL=hdfs://etc19-01:8020/
+jarPath=/home/hadoopadmin/
+resultPath=output/result/
+MRcmd=hadoop jar

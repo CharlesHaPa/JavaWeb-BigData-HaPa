@@ -1,0 +1,384 @@
+
+.carousel-indicators  {
+	left: 48%;  
+	width: 6%;  
+	margin: 0 auto;
+	border-radius: 10px;
+	bottom: 8px;
+	border: 1px solid black 1px;
+	background-color: #000000;
+	opacity: 0.6;
+}
+
+.carousel-indicators li{
+    background-color: black;
+	opacity: 0.6;
+}
+
+.carousel{
+	position:relative;
+	top:-25px;
+}
+
+.carousel-fade .carousel-inner .item {
+  opacity: 0;
+  -webkit-transition-property: opacity;
+  -moz-transition-property: opacity;
+  -o-transition-property: opacity;
+  transition-property: opacity;
+}
+
+.carousel-fade .carousel-inner .active {
+  opacity: 1;
+}
+
+.carousel-fade .carousel-inner .active.left,
+.carousel-fade .carousel-inner .active.right {
+  left: 0;
+  opacity: 0;
+  z-index: 1;
+}
+
+.carousel-fade .carousel-inner .next.left,
+.carousel-fade .carousel-inner .prev.right {
+  opacity: 1;
+}
+
+.carousel-fade .carousel-control {
+  z-index: 2;
+}
+
+#content {
+    margin-top: 10px;
+    padding: 0;
+}
+
+body{
+	width:1582px;
+	margin-top:0;
+	margin-left:160px;
+	margin-right:0;
+	min-width: 1500px;"
+}
+
+#search{
+	height: inherit;
+	font-size: 19px;
+	border: solid black;
+	border-radius: 10px;
+}
+
+#radio_div{
+	text-align: center;
+	margin-top: 40px;
+}
+
+#radio_div input{
+	position: relative;
+	top: 1px;
+}
+
+.input_label{
+	cursor: pointer;
+}
+
+.radio-inline + .radio-inline, .checkbox-inline + .checkbox-inline {
+	margin-top: 0;
+	margin-left: 0px;
+	padding-left:47px;
+}
+
+
+#btn_div{
+	width: 80%;
+	height: 50px;
+	margin: 12% 10%;
+	text-align: center;
+}
+
+#search_btn{
+	width: 100%;
+	height: 50px;
+}
+
+.form-group{
+	margin-left: 14%;
+	margin-top: 10%;
+}
+
+#train{
+    padding:0 2%;
+	font-size: 20px;
+	text-align: center;
+}
+
+#notice{
+	height: 50%;
+}
+
+#passenger_notice{
+	height: 50%;
+}
+
+#info{
+	padding-right: 0px;
+}
+
+#footer p {
+    margin-top: 1%;
+    text-align: center;
+    color: darkgrey;
+}
+strong, b {
+    font-weight: bold;
+    position: relative;
+    right: 3px;
+}
+
+.railway_list .w1 div, .railway_list .w2 div, .railway_list .w3 div {
+    height: 27px;
+    line-height: 27px;
+}
+
+.railway_list {
+    padding: 3% 2%;
+    height: 1%;
+    min-height: 20px;
+    border: hidden;
+    position: relative;
+}
+
+.w1, .w2, .w3, .w4, .w5 {
+    float: left;
+    padding-top: 5px;
+}
+
+.w1 {
+    width: 13%;
+}
+
+.w2 {
+    width: 16%;
+}
+.railway_list .w2 div {
+    color: #333;
+}
+
+.railway_list .w2 div label {
+    font-size: 12px;
+}
+
+.w3 {
+    width: 15.9%;
+}
+
+.railway_list .w3 div i {
+    margin-top: 5px;
+}
+
+.w4 {
+    width: 10.5%;
+}
+
+.w5 {
+    width: 33%;
+}
+
+.w5 div{
+	height: 25px;
+}
+
+.railway_list .w5 div b {
+    color: #FA6700;
+    font-size: 14px;
+    display: inline-block;
+    width: 35%;
+}
+
+.qp_btn1:hover {
+    background: #004fb3;
+    color: #fff;
+}
+
+.railway_list .w4 div {
+    padding-top: 5px;
+    font-size: 12px;
+}
+
+#result{
+	width: 83.7%;
+	min-width: 1465px;
+	margin: 0 auto;
+}
+
+.qp_btn2 {
+    display: block;
+    width: 59px;
+    height: 22px;
+    line-height: 24px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    text-align: center;
+    color: white;
+    background: #ff9913;
+}
+
+.railway_list .w6 div {
+	position: relative;
+	top: -6px;
+    padding-top: 4.8px;
+    height: 24px;
+}
+
+.w6 {
+    float: left;
+    position: relative;
+    top: 5px;
+}
+
+.shi_icon, .zhong_icon{
+    display: block;
+    float: left;
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+    font-size: 12px;
+    border-radius: 4px;
+}
+.shi_icon {
+    color: #2577e3;
+}
+.zhong_icon{
+    color: #ff9913;
+}
+i, em {
+    font-style: normal;
+}
+
+body li{
+	list-style: none;
+}
+
+#searchBox {
+    clear: both;
+    width: 100%;
+    min-width: 1465px;
+    margin: 0 auto;
+    height: 75px;
+    padding: 12px 10px;
+    background: #eef1f8;
+    font-size: 16px;
+    border: 1px solid #298cce;
+    border-radius: 3px;
+}
+#searchBox ul{
+	margin: 0;
+}
+
+.cursor{
+	cursor: pointer;
+}
+#journeyType {
+    float: left;
+    width: 13%;
+    text-align: center;
+    margin-right: 0px;
+    position: relative;
+    top: 12px;
+}
+#journeyType ul{
+	padding: 0;
+}
+#journeyType li {
+    width: 75px;
+    display: inline-block;
+    height: 20px;
+    padding: 2px;
+    border: hidden;
+}
+
+#journeyType input{
+	display:inline;
+}
+
+#passengerType{
+    float: left;
+    width: 6%;
+    text-align: center;
+}
+
+#passengerType ul{
+	padding: 0;
+}
+
+#passengerType li{
+	height: 20px;
+    padding: 2px;
+	border-right: solid #298cce 1px;
+}
+
+#placeSearch input{
+    width: 122px;
+    height: 30px;
+    float: left;
+}
+
+#placeSearch label{
+	display: block;
+    width: 20%;
+    float: left;
+    padding-right: 2px;
+    text-align: right;
+    margin-left: 5%;
+}
+#placeSearch input{
+    width: 60%;
+    height: 30px;
+    float: left;
+}
+
+#placeSearch  li{
+	width: 15%;
+    float: left;
+    height: 30px;
+    line-height: 30px;
+    padding: 10px 0;
+    white-space: nowrap;
+}
+
+#model_btn{
+	display: block;
+    width: 100%;
+    height: 35px;
+    font-size: 16px;
+    border-radius:5px;
+    text-align: center;
+    line-height:30px;
+    float: left;
+    color: white;
+    background: #ff9913;
+}
+
+#searchBox #placeSearch li{
+	margin: 0 20px;
+}
+#placeSearch input{
+	margin-left: 20px;
+}
+#searchBox #btn{
+	width: 7%;
+	height: 35px;
+	float: right;
+	margin-right: 8%;
+	margin-top: 8px;
+	height: 35px;
+}
+.tbody {
+    height: 195px;
+    background: #F4FBFF;
+    font-size: 18px;
+    border: solid 1px #a4a9a5;
+}

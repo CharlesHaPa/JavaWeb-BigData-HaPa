@@ -1,0 +1,54 @@
+package com.sw1408.controller;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.sw1408.service.AdminService;
+
+@Controller
+public class AdminController {
+	@Resource AdminService adminService;
+	
+	@RequestMapping(value="/admin/main")
+	public ModelAndView adminMain(HttpServletRequest request){
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("/admin/login");
+		return modelAndView;
+	}
+	
+	@RequestMapping(value="/admin/index")
+	public ModelAndView adminIndex(HttpServletRequest request){
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("/admin/index");
+		return modelAndView;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/admin/on")
+	public String adminLogin(HttpServletRequest request){
+		String userName;
+		String psw;
+		System.out.println("in");
+		userName = request.getParameter("userName");
+		psw = request.getParameter("psw");
+		int flag = adminService.adminLogin(userName, psw);
+		if(flag == 1){
+			request.getSession().setAttribute("flagUserName",userName);
+			return "{\"flag\":"+"\"fail1\"}";
+		}else{
+			return "{\"flag\":"+"\"fail\"}";
+		}
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/admin/logout",produces="text/json;charset=UTF-8")
+	public String adminLogout(HttpServletRequest request){
+		request.getSession().setAttribute("flagUserName",null);
+		return "true";
+	}
+}

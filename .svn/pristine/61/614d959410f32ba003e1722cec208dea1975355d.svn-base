@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sw1408.mapper.TrainMapper">
+    <select id="selectTrainById" resultType="com.sw1408.po.Train">
+        SELECT * FROM TRAIN WHERE ID = #{id}
+    </select>
+
+    <select id="selectTrainByTrainName" parameterType="com.sw1408.po.Train" resultType="com.sw1408.po.Train">
+        SELECT * FROM TRAIN WHERE TRAINNAME = #{trainName}
+    </select>
+
+    <delete id="deleteTrainById">
+        DELETE FROM TRAIN WHERE ID = #{id}
+    </delete>
+
+    <select id="selectTrainByTrainNameAndStationIdAndDepartDate" resultType="com.sw1408.po.Train">
+        select * from train where id = (
+          select trainId from schedule where trainId in (
+            select id from train where trainName = #{0}
+          )
+            and stationid = #{1} and round(departtime) = #{2}
+        )
+    </select>
+
+    <insert id="addTrain" parameterType="com.sw1408.po.Train">
+        INSERT INTO TRAIN(ID,TYPE,TRAINNAME,ALLPATH) VALUES(#{id},#{type},#{trainName},#{allPath})
+    </insert>
+    <select id="selectTrainNames" resultType="java.lang.String">
+        select trainname from train group by trainname
+    </select>
+    
+     <select id="selectFirstTrainByTrainName" resultType="com.sw1408.po.Train">
+        select * from train where trainname = #{trainName} and rownum = 1
+    </select>
+
+</mapper>

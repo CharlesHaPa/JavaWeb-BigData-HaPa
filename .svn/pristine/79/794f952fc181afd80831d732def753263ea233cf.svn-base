@@ -1,0 +1,119 @@
+package com.sw1408.controller;
+import java.text.SimpleDateFormat;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import javax.servlet.http.HttpServletRequest;
+
+import javax.servlet.http.HttpSession;
+
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import org.springframework.web.bind.annotation.ResponseBody;
+
+
+import com.sw1408.service.TicketService;
+import com.sw1408.vo.AvailableTrain;
+import com.sw1408.vo.TicketVo;
+
+
+@Controller
+public class TicketController {
+
+	@Resource
+	TicketService ticketService;
+	
+	@RequestMapping("ticket/queryTicket")
+	public ModelAndView queryTicket(HttpServletRequest request){
+		
+		//获取当前时间
+		java.util.Date d = new java.util.Date();  	 
+	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");  
+	    String dateNowStr = sdf.format(d);  
+	    //获取当前月日
+	    String[] currentDates = dateNowStr.split("-");
+	    int currentMonth =Integer.parseInt(currentDates[1]);
+	    int currentDay =Integer.parseInt(currentDates[2]);
+		ModelAndView modelAndView=new ModelAndView();
+		List<AvailableTrain> trains= ticketService.queryTicket(request.getParameter("fromStation"), 
+				request.getParameter("toStation"), request.getParameter("departDate"));
+		//获取查询月日
+		String[] conditionDates = request.getParameter("departDate").split("-");
+		int conditionMonth = Integer.parseInt(conditionDates[1]);
+		int conditionDay = Integer.parseInt(conditionDates[2]);
+		//筛去当天已出发车次
+		if(currentMonth == conditionMonth && currentDay == conditionDay ){
+			for (AvailableTrain availableTrain : trains) {
+				String trainDates[] = availableTrain.getStartDate().split(":");
+				//获取火车出发小时分
+				int trainHour = Integer.parseInt(trainDates[0]);
+				int trainMinutes = Integer.parseInt(trainDates[1]);
+				int currentHour = d.getHours();
+				int currentMinute = d.getMinutes();
+				if(currentHour > trainHour){
+					trains.remove(availableTrain);
+				}
+				else if(currentHour == trainHour && currentMinute > trainMinutes){
+					trains.remove(availableTrain);
+				}
+			}
+		}
+		modelAndView.setViewName("ticket/resultList_"+request.getParameter("queryType"));
+		modelAndView.addObject("trains",trains);
+		return modelAndView;
+	}
+
+
+	@RequestMapping(value = "/payTicket",produces="html/text;charset=UTF-8")
+	@ResponseBody
+	public String payTicket(HttpServletRequest request, @ModelAttribute TicketVo ticketVo) 
+					throws Exception {
+		try{
+			ticketVo.setClientId((Integer)request.getSession().getAttribute("clientId"));
+			return ticketService.payTicket(ticketVo);
+		}catch(Exception e){
+			return null;	
+		}		
+	}
+
+
+	//@RequestParam会将值匹配到id属性里
+	@ResponseBody
+	@RequestMapping(value="/returnTicket",method= RequestMethod.POST)
+	public boolean returnTicket(@RequestParam int itemId){
+		boolean result = ticketService.returnTicket(itemId);
+		return result;
+
+	}
+
+	
+	@RequestMapping(value = "ticket/endorse")
+	public String endorse(@RequestParam String isEndorse,int endorseItemId, HttpServletRequest request){
+		HttpSession session = request.getSession();
+		session.setAttribute("endorseItemId", endorseItemId);
+		session.setAttribute("isEndorse", isEndorse);
+		return "ticket/query";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/endorseAfterPay")
+	public boolean endorseAfterPay(@RequestParam int endorseItemId){
+		return returnTicket(endorseItemId);
+	}
+	
+	@RequestMapping(value="ticket/removeEndorse")
+	public void removeEndorse(HttpServletRequest request){
+		HttpSession session = request.getSession();
+		session.removeAttribute("isEndorse");
+		session.removeAttribute("endorseItemId");
+	}
+
+}

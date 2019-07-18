@@ -1,0 +1,191 @@
+.form_panel {
+    min-height: 42px;
+    min-width: 800px;
+    margin-bottom: 17px;
+    padding-left: 110px;
+    border: 1px solid #D7E8F5;
+}
+.form_panel h3{
+	position: absolute;
+	margin-left: -110px;
+	padding: 8px,10px,8px,15px;
+	color:#666
+}
+
+.form_field{
+	min-height: 32px;
+	padding: 15px;
+	background: #eff6fc;
+}
+
+.form_field .ticket{
+	border-left:1px solid #D7E8F5 ;
+}
+
+.tb_train_info2 td {
+    line-height: 25px;
+    color: #666;
+    font-size: 14px;
+}
+.tb_train_info2 .station {
+    font-size: 18px;
+    display: block;
+    color: #333;
+    font-weight: bold;
+}
+.tb_train_info2 .time {
+    font-size: 22px;
+    font-family: airal;
+    display: inline-block;
+    line-height: 30px;
+    margin-top: 5px;
+}
+.tb_train_info2 .date {
+    color: #999;
+}
+.tb_train_info2 .checi {
+    font-size: 16px;
+    color: #333;
+    font-family: Helvetica;
+}
+.line_arrow {
+    width: 173px;
+    height: 25px;
+    background: url(../img/book_tickets.png) no-repeat 0 0;
+    display: inline-block;
+}
+.text_center {
+    text-align: center;
+}
+.text_right {
+    text-align: right !important;
+}
+.tb_train_info2 .consuming {
+    line-height: 28px;
+    background: #DBEFFF;
+    border-radius: 14px;
+    display: inline-block;
+    padding: 0 15px 0 10px;
+ }   
+  /*----------passenger Info-------------*/
+.single_passenger {
+    margin-bottom: 15px;
+    padding: 15px;
+    border-top: 1px solid #C8D9EF;
+    background-color: #EFF6FC;
+    z-index: 2;
+}
+.single_passenger .btn_zhongtu {
+    display: inline-block;
+    margin: 0 0 10px 20px;
+    padding: 2px 5px;
+    border: 1px solid #87B6E2;
+    border-radius: 3px;
+    background-color: #E5F3FE;
+    box-shadow: 0 1px 0px #CCC;
+}
+.single_passenger .title {
+    display: inline-block;
+    color: #666;
+    margin: 0 20px 10px 0;
+}
+.btn_add_p {
+    display: inline-block;
+    width: 129px;
+    _width: 109px;
+    height: 36px;
+    _padding-left: 20px;
+    font: 14px/36px "Microsoft Yahei", Simsun, sans-serif;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid #D1D1D1;
+    border-radius: 3px;
+    color: #333;
+    background-color: #FFF;
+    box-shadow: 0 1px 0 rgba(95, 50, 0, 0.5);
+}
+.btn_add_p:hover {
+    text-decoration: none;
+    color: #FFF;
+    background-color: #27C;
+    border-color: #27C;
+}
+
+/*-----*/
+.btn_box {
+    position: relative;
+    margin-bottom: 15px;
+    text-align: center;
+    _height: 37px;
+}
+
+.btn_check ,.btn_check_disable {
+    display: inline-block;
+    height: 36px;
+    margin: 0 auto;
+    padding: 0 30px;
+    border: 1px solid #E77C00;
+    border-radius: 3px;
+    box-shadow: 0 1px 0 rgba(95,50,0,0.7);
+    vertical-align: middle;
+    font: bold 16px/36px Simsun, sans-serif;
+    color: #fff;
+    text-align: center;
+    overflow: hidden;
+    cursor: pointer;
+    outline: none;
+    background-color: #F79700;
+}
+.btn_check:hover {
+    border: 1px solid #DE7800;
+    background-color: #DE7800;
+}
+/*-----------*/
+.base_label, .invoice_field .base_txtgray {
+    display: inline-block;
+    margin-bottom: 20px;
+    vertical-align: middle;
+}
+.price_box {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #F0E9D6;
+    background-color: #FFFAED;
+}
+
+.price_box .basefix .float_right {
+    margin-top: -6px;
+}
+
+.price_box .base_price {
+    padding-right: 5px;
+    font-size: 36px;
+}
+.base_price {
+    color: #F60;
+    font: normal 18px Tahoma;
+}
+
+.mask {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: #000;
+	opacity: 0.5;
+	filter: alpha(opacity=50);
+	display: none;
+	z-index: 99;
+}
+	
+.mess{
+	position: absolute;
+	display: none;
+	padding: 10px;
+	width: 300px;
+	border: 1px solid #ccc;
+	background: #ececec;
+	z-index: 101;
+	background: #eff6fc;
+}

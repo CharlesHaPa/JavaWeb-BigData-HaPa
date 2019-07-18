@@ -1,0 +1,93 @@
+package com.sw1408.service.impl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.github.pagehelper.PageHelper;
+import com.sw1408.mapper.PassengerMapper;
+import com.sw1408.po.Client;
+import com.sw1408.po.Passenger;
+
+import com.sw1408.mapper.ClientMapper;
+import com.sw1408.service.ClientService;
+import com.sw1408.util.PageParams;
+
+@Service
+public class ClientServiceImpl implements ClientService {
+	
+	@Resource 
+	private ClientMapper clientMapper;
+
+	@Resource
+	private PassengerMapper passengerMapper;
+	
+	@Override
+	public boolean addPassenger(Passenger passenger, Client client) {
+		
+		int result_1 = passengerMapper.insertOne(passenger);
+		
+		int passengerId = passengerMapper.selectIdByCardId(passenger.getCardId());
+		passenger.setId(passengerId);
+		
+		int result_2 = passengerMapper.insertOne_c_to_p(client.getId(), passenger.getId());
+		
+		if (result_1 > 0 && result_2 > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public List<Passenger> selectAllPassengers(PageParams pageParams, int clientId) {	
+		
+		PageHelper.startPage(pageParams.getPageNum(), pageParams.getPageSize());
+		List<Passenger> passengers = passengerMapper.selectAll(clientId);
+		return passengers;
+	}
+
+	@Override
+	public boolean updatePassengerInfo(Passenger passenger) {
+		
+		int result = passengerMapper.updateInfo(passenger);
+		if (result > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean deletePassenger(Passenger passenger) {
+		
+
+		int result_2 = passengerMapper.deleteOne_c_to_p(passenger.getId());
+		
+		int result_1 = passengerMapper.deleteOne(passenger.getId());
+		
+		if(result_1 > 0 && result_2 > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public Client login(String enterName, String psw) {
+		Client result=clientMapper.selectClientByEnterName(enterName);
+		if(result == null){
+			System.out.println("用户不存在");
+			return null;
+		}
+		else if(result.getPassword().equals(psw)){
+			System.out.println("登陆成功");
+			return result;
+		}
+		System.out.println("密码错误");
+		return null;
+	}
+
+}

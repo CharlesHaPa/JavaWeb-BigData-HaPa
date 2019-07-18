@@ -1,0 +1,284 @@
+package com.sw1408.service.impl;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Properties;
+
+import javax.annotation.Resource;
+
+import org.apache.hadoop.hive.ql.parse.HiveParser.resource_return;
+import org.apache.taglibs.standard.lang.jstl.test.beans.PublicInterface2;
+import org.springframework.stereotype.Service;
+
+import com.sw1408.mapper.AdminMapper;
+import com.sw1408.mapper.UtilMapper;
+import com.sw1408.po.Administer;
+import com.sw1408.service.AdminService;
+import com.sw1408.util.DateUtil;
+import com.sw1408.util.HiveUtil;
+import com.sw1408.util.PropertiesUtil;
+import com.sw1408.util.RemoteCmdUtil;
+import com.sw1408.util.ResultSetToJson;
+import com.sw1408.util.RunCmdUtil;
+
+import net.sf.json.JSONArray;
+@Service
+public class AdminServiceImpl implements AdminService {
+	public String getSeatInfo(String departure,String arrival,String date){
+		HiveUtil hiveUtil =new HiveUtil();
+		JSONArray jsonArray = new JSONArray();
+		String sql="select train.type ,schedule.DEPARTTIME,count(*) from TICKET,seat join train on seat.TRAINID = train.id,schedule" 
+				+" where departure = '{d}' and arrival= '{a}' "
+				+ "and TICKET.STATUS = '已经出票' and TICKET.SEATID = seat.id "
+				+" and schedule.trainid = train.id and schedule.STATIONID = '{d}' and "
+				+" schedule.DEPARTTIME BETWEEN to_date('{D1} 00:00:00') and to_date('{D2} 23:59:59')"
+				+" group by train.type,schedule.DEPARTTIME order by schedule.DEPARTTIME";
+			sql = sql.replace("{d}", getId(departure)+"").replace("{a}", getId(arrival)+"");
+			try {
+				sql = sql.replace("{D1}", DateUtil.caculateDate(date, 7)).replace("{D2}", date);
+			} catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		ResultSet res=hiveUtil.executeQuery(sql);
+		int[][] count =new int[3][7];
+		int[] flag={0,0,0};
+		try {
+			while (res.next()) {			 
+				       if(res.getString(1).equals("G")){
+				    	   count[0][flag[0]++] = Integer.parseInt(res.getString(3));
+				       }else if(res.getString(1).equals("D")){
+				    	   count[1][flag[1]++] = Integer.parseInt(res.getString(3)); 
+				       }else if(res.getString(1).equals("K")){
+				    	   count[2][flag[2]++] = Integer.parseInt(res.getString(3)); 
+				       }
+				       
+				}
+			jsonArray  = JSONArray.fromObject(count);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return jsonArray.toString();		
+	}
+	public int getId(String station){
+		String sql = "select id from station where name = '"+station+"'";
+		HiveUtil hiveUtil =new HiveUtil();
+		ResultSet res=hiveUtil.executeQuery(sql);
+		try {
+			if (res.next()){
+				
+				System.out.println(Double.parseDouble(res.getString(1)));
+				return (int)Double.parseDouble(res.getString(1));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return -1;
+	}
+	@Override
+	public boolean addTables(String table,String dir,String dbName) {
+		// TODO Auto-generated method stub
+		PropertiesUtil propertiesUtil = new PropertiesUtil();
+		Properties properties = propertiesUtil.getProperties("/system.properties");
+		String cmd = "/home/hadoopadmin/sqoop-1.4.6.bin__hadoop-2.0.4-alpha/bin/sqoop import"
+				+ " --connect "+properties.getProperty("hive_url")
+				+ " --username "+properties.getProperty("mysql.user") 
+				+ " --password "+properties.getProperty("mysql.password") 
+				+ " --table "+table
+				+ " --hive-import --hive-database "+dbName
+				+ " --hive-table "+table
+				+ " --target-dir "+dir
+				+ " -m 1";
+		RemoteCmdUtil remoteCmdUtil=new RemoteCmdUtil(properties.getProperty("ip"),
+				properties.getProperty("username"),properties.getProperty("password"));
+		System.out.println(cmd);
+		System.out.println(remoteCmdUtil.execute(cmd));
+		return true;
+	}
+	
+	@Resource
+	UtilMapper utilMapper;
+	@Override
+	public List<String> getTables(String db,String dbName) {
+		// TODO Auto-generated method stub
+		HiveUtil hiveUtil =new HiveUtil(dbName);
+		List<String> list= new ArrayList<String>();
+		String sql="show tables";
+		ResultSet res = null;
+		if("hive".equals(db)){
+			res=hiveUtil.executeQuery(sql);
+			try {
+				while (res.next()) {
+					list.add(res.getString(1));
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else if("local".equals(db)){
+			list = utilMapper.queryTable();
+		}		
+		return list;
+	}
+	public void delTable(String table,String db){
+		HiveUtil hiveUtil =new HiveUtil(db);
+		hiveUtil.executeCommand("drop table "+table);
+	}
+	@Override
+	public boolean runCmd(String sql,String table,String db,String dir) {
+		PropertiesUtil propertiesUtil = new PropertiesUtil();
+		Properties properties = propertiesUtil.getProperties("/system.properties");
+		String cmd = "/home/hadoopadmin/sqoop-1.4.6.bin__hadoop-2.0.4-alpha/bin/sqoop import"
+				+ " --connect "+properties.getProperty("hive_url")
+				+ " --username "+properties.getProperty("mysql.user") 
+				+ " --password "+properties.getProperty("mysql.password") 
+				+ " --query '"+sql+"'"
+				+ " --hive-import --hive-database "+db+" --hive-table "+ table
+				+ " --target-dir "+dir
+				+ " -m 1";
+		RemoteCmdUtil remoteCmdUtil=new RemoteCmdUtil(properties.getProperty("ip"),
+				properties.getProperty("username"),properties.getProperty("password"));
+
+		System.out.println(cmd);
+		System.out.println(remoteCmdUtil.execute(cmd));
+		return false;
+	}
+	@Override
+	public List<String> getDbs() {
+		HiveUtil hiveUtil =new HiveUtil();
+		List<String> list= new ArrayList<String>();
+		String sql="show databases";
+		ResultSet res = hiveUtil.executeQuery(sql);
+		try {
+			while (res.next()) {
+				list.add(res.getString(1));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return list;
+	}
+	@Override
+	public List<String> getStructure(String db,String table) {
+		// TODO Auto-generated method stub
+		HiveUtil hiveUtil =new HiveUtil(db);
+		List<String> list= new ArrayList<String>();
+		String sql="desc "+table;
+		ResultSet res =hiveUtil.executeQuery(sql);
+		try {
+			while (res.next()) {
+				list.add(res.getString(1));
+				list.add(res.getString(2));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	@Resource AdminMapper adminMapper;
+	
+	@Override
+	public int adminLogin(String userName,String psw){
+		Administer administer = adminMapper.selectAdminByEnterName(userName);
+		System.out.println(administer);
+		if(administer == null){
+			System.out.println("用户不存在！");
+			return 0;
+		}else if(psw.equals(administer.getPsw())){
+			System.out.println("登陆成功!");
+			return 1;
+		}else{
+			System.out.println("密码错误！");
+			return 0;
+		}
+	}
+	@Override
+	public String getMaleAnalysis(String year) {
+		String json="";
+		HiveUtil hiveUtil=new HiveUtil("Hapa");
+		ResultSetToJson resultSetToJson = new ResultSetToJson();
+		String cmd="select age,count(*) count from gender_analysis where year(paydate)="
+				+year+" and gender=1.0 group by age";
+		ResultSet resultSet=hiveUtil.executeQuery(cmd);
+		try {
+			json=resultSetToJson.resultSetToJson(resultSet);
+			System.out.println(json);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return json;
+	}
+	
+	@Override
+	public String getFamaleAnalysis(String year) {
+		String json="";
+		HiveUtil hiveUtil=new HiveUtil("Hapa");
+		ResultSetToJson resultSetToJson = new ResultSetToJson();
+		String cmd="select age,count(*) count from gender_analysis where year(paydate)="
+				+year+" and gender=0.0 group by age";
+		ResultSet resultSet=hiveUtil.executeQuery(cmd);
+		try {
+			json=resultSetToJson.resultSetToJson(resultSet);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return json;
+	}
+	
+	@Override
+	public List<String> countItemByHour(String countByYear){
+		String sql = "select count(id) from item where status ='已购买' and year(createdate)="+countByYear+" group by concat(year(createdate),month(createdate),day(createdate))";
+		
+		List<String> list = new ArrayList<String>();
+		HiveUtil hiveUtil = new HiveUtil("Hapa");
+		ResultSet resultSet = hiveUtil.executeQuery(sql);
+		try {
+			while(resultSet.next()){
+				list.add(resultSet.getString(1));
+			}
+			return list;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	@Override
+	public ResultSet showTop5TicketsNumGroupByCity(String year) {
+		
+		HiveUtil hiveUtil =new HiveUtil("Hapa");
+		ResultSet resultSet = null;
+		try {
+			String desc = "select res.name as city, count(res.name) as num from (select s.name as name from station s, ticket t where s.ID = t.DEPARTURE) res group by res.name  order by num desc limit 4";
+			resultSet = hiveUtil.executeQuery(desc);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resultSet;
+	}
+
+	@Override
+	public int showAllTicketsNum(String year) throws Exception {
+		HiveUtil hiveUtil =new HiveUtil("Hapa");
+		ResultSet resultSet = null;
+		String desc = "select count(*) as allNum from ticket";
+		resultSet = hiveUtil.executeQuery(desc);
+		resultSet.next();
+		System.out.println(resultSet);
+		int num = Integer.parseInt(resultSet.getString("allNum"));
+		System.out.println(num);
+		return num;
+	}
+}

@@ -1,0 +1,55 @@
+function fun_return(itemId,clientId,price,rate){
+	window.itemId = itemId;
+	window.clientId = clientId;
+	var rate = rate;
+	var returnAmount = price*(1-rate);
+	var deductAmount = price*rate;
+	jQuery(document).ready(function($){
+	    $('.open_rec_interface').click(function close(){
+			$('.returnTicket_cover').fadeIn(20);
+			$('.returnTicket').slideDown(20);
+			$(".re_body_right").load("../item/returnConfirm","price="+price+"&returnAmount="+returnAmount+"&deductAmount="+deductAmount+"&rate="+rate);
+		})
+		$('.re_close').click(function(){
+			$('.returnTicket_cover').fadeOut(0);
+			$('.returnTicket').slideUp(0);
+			window.location.href = "personalItem?clientId="+clientId; 
+		})
+	 })
+}
+
+$(document).ready(function() { 
+	alert('success');
+}); 
+
+
+function returnConfirm(){
+	var itemId = window.itemId;
+	$.ajax({ 
+	    type : "POST", 
+	    url : "/HaPa/returnTicket",
+	    data: {
+	    	itemId:itemId
+	    },
+	    success : function(result) { 
+	    	if(result == true){
+	    		$(".re_body").load("../item/success");
+	    	}
+	    	else{
+	    		$(".re_body").load("../item/failure");
+	    	}
+	    } 
+	
+	}); 
+}
+function changeBtnStatus(){
+	var itemType = document.getElementById("selectItemType").options[document.getElementById("selectItemType").selectedIndex].value;
+	if(itemType == 'noTravel'){
+		$(".open_rec_interface").attr("disabled","false");
+		$(".open_rec_interface").css("background-color","#FF8000");
+	}
+	else{
+		$(".open_rec_interface").attr("disabled","disabled");
+		$(".open_rec_interface").css("background-color","#cccccc");
+	}
+}

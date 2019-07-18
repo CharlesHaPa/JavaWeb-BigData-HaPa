@@ -1,0 +1,160 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+
+/*轮转图区域*/
+.banner{
+	/*宽度为浏览器可见区域*/
+	width: 100%;
+	/*高度为290像素*/
+	height: 290px;
+}
+
+.header{
+	position: relative;
+}
+
+.b_focus{
+	margin: 5px auto;
+	width: 1600px;
+	position: relative;
+}
+
+.b_pic{
+	list-style: none;
+}
+
+.b_pic li{
+	display: none;
+}
+
+.b_focus .b_btn{
+	list-style: none;
+	position: absolute;
+	bottom: 20px;
+	left: 750px;
+	background-color: black;
+	padding: 10px 20px;
+	border-radius: 14px;
+	opacity: 0.6;
+}
+
+.b_focus .b_btn li{
+	width: 12px;
+	height: 12px;
+	border: 1px solid white;
+	float: left;
+	margin: 0 3px;
+	border-radius: 6px;
+	cursor:pointer;
+}
+.b_btn .no{
+	background-color: white;
+}
+
+.nav_first{
+	background-color: black;
+	opacity: 0.7;
+	width: 120px;
+	height: 50px;
+	float: left;
+	list-style: none;
+	border-right: 1px solid gray;
+	position: relative;
+	top: -290px;
+	left: 1155px;
+	text-align: center;
+	line-height: 50px;
+	color: white;
+}
+
+.nav_first:hover{
+	opacity: 0.4;
+	cursor: pointer;
+}
+
+.nav_second{
+	display: none;
+	clear: both;
+	background-color: black;
+	opacity: 0.7;
+	width: 120px;
+	height: 50px;
+	list-style: none;
+	position: relative;
+	top: -290px;
+	left: 1640px;
+	text-align: center;
+	line-height: 50px;
+	color: white;
+}
+
+.nav_second:hover{
+	opacity: 0.4;
+	cursor: pointer;
+}
+
+#search{
+	position: relative;
+	top:-45px;
+	border: solid black;
+	width: 1600px;
+	height: 120px;
+	margin: 0 auto;
+}
+#search div{
+	display: inline-block;
+}
+#journeyTypeDiv{
+	margin-top: 30px;
+	margin-left: 30px;
+	width: 10%;
+	border-right: solid gray;
+	text-align: center;
+}
+#journeyTypeDiv #doubleJourney{
+	margin-left: 20px;
+}
+#search #searchCondition{
+	margin-left: 30px;
+}
+#search #searchCondition input{
+	margin-right: 30px;
+}
+#searchButton{
+	width: 60px;
+	height: 30px;
+	border-radius: 25px;
+	border: hidden;
+	cursor: pointer;
+	position: relative;
+	left: 80px;
+}
+#ticketTypeDiv{
+	margin-top:19px;
+	margin-left: 30px;
+	width: 10%;
+	border-right: solid gray;
+	text-align: center;
+}
+#ticketTypeDiv #normal{
+	margin-left: 20px;
+}
+#trainType input{
+	margin-left: 45px;
+}
+#trainType #G{
+	margin-left: 30px;
+}
+#departTimeDiv{
+	margin-left: 75px;
+}
+#recommendButton{
+	width: 60px;
+	height: 30px;
+	border-radius: 25px;
+	border: hidden;
+	margin-left: 307px;
+	cursor: pointer;
+}
