@@ -10,7 +10,7 @@
 ![image](https://github.com/CharlesHaPa/JavaWeb-BigData-HaPa/blob/master/display/frame.png)
 ### 效果展示
 #### 主页
-![image](https://github.com/CharlesHaPa/JavaWeb-BigData-HaPa/blob/master/display/1.png)
+![image](https://github.com/CharlesHaPa/JavaWeb-BigData-HaPa/blob/master/display/1.PNG)
 #### 订单管理
 ![image](https://github.com/CharlesHaPa/JavaWeb-BigData-HaPa/blob/master/display/2.png)
 #### 退票
